@@ -45,7 +45,7 @@ __device__ inline float square(const float a) {
  * Not fully coalesced if B_X < 32, so use cache.
  */
 template <int B_Y, int B_X, int filtersPerThread>
-__global__ void kNormalizeLCWeights(float* weights, const uint numFilters, const int numModules, const uint weightsPerFilter, const float norm) {
+__global__ void kNormalizeLCWeights(hipLaunchParm lp, float* weights, const uint numFilters, const int numModules, const uint weightsPerFilter, const float norm) {
     const uint moduleIdx = B_Y * hipBlockIdx_y + hipThreadIdx_y;
     const uint filterIdx = B_X * hipBlockIdx_x + hipThreadIdx_x;
     
@@ -125,7 +125,7 @@ void normalizeLocalWeights(NVMatrix& weights, int numModules, float norm) {
  * target:  (numChannels, tgtPixels, numImages)
  */
 template <int imgsPerThread, bool checkCaseBounds>
-__global__ void kCrop(float* imgs, float* target, const uint numImages, const int imgStride,
+__global__ void kCrop(hipLaunchParm lp, float* imgs, float* target, const uint numImages, const int imgStride,
                       const uint imgSize, const uint tgtSize, const uint startY, const uint startX) {
     const uint imgPixels = imgSize * imgSize;
     const uint tgtPixels = tgtSize * tgtSize;
@@ -168,7 +168,7 @@ __global__ void kCrop(float* imgs, float* target, const uint numImages, const in
  * [V]      [0.615      -0.55861    -0.05639][B]
  */
 template <int imgsPerThread, bool checkCaseBounds>
-__global__ void kRGBToYUV(float* imgs, float* target, const int imgPixels, const int numImages, const int imgStride) {
+__global__ void kRGBToYUV(hipLaunchParm lp, float* imgs, float* target, const int imgPixels, const int numImages, const int imgStride) {
     const int caseIdx = hipBlockIdx_x * 32 * imgsPerThread + hipThreadIdx_x;
     const int pxIdx = hipBlockIdx_y * 4 + hipThreadIdx_y;
 
@@ -233,7 +233,7 @@ __device__ inline float labf(const float x) {
  * 
  */
 template <int imgsPerThread, bool checkCaseBounds, bool center>
-__global__ void kRGBToLAB(float* imgs, float* target, const int imgPixels, const int numImages, const int imgStride) {
+__global__ void kRGBToLAB(hipLaunchParm lp, float* imgs, float* target, const int imgPixels, const int numImages, const int imgStride) {
     const int caseIdx = hipBlockIdx_x * 32 * imgsPerThread + hipThreadIdx_x;
     const int pxIdx = hipBlockIdx_y * 4 + hipThreadIdx_y;
 
@@ -286,7 +286,7 @@ __global__ void kRGBToLAB(float* imgs, float* target, const int imgPixels, const
  * So that is my justification for being lazy here.
  */
 template <int imgsPerThread, bool checkCaseBounds>
-__global__ void kResizeBilinear(float* imgs, float* target, const int imgSize, const int tgtSize,
+__global__ void kResizeBilinear(hipLaunchParm lp, float* imgs, float* target, const int imgSize, const int tgtSize,
                                 const int numImages, const int imgStride, const float scale,
                                 const float centerScale) {
     const int numChunksX = DIVUP(tgtSize, 4);
@@ -354,7 +354,7 @@ __global__ void kResizeBilinear(float* imgs, float* target, const int imgSize, c
  * Tried imgsPerThread, slower.
  */
 template<int B_Y, int B_X, int radius>
-__global__ void kGaussianBlur(float* imgs, float* filter, float* target, const int imgSize,
+__global__ void kGaussianBlur(hipLaunchParm lp, float* imgs, float* filter, float* target, const int imgSize,
                               const int numImages, const int imgStride,
                               const bool horiz,
                               const float scaleTargets, const float scaleOutputs) {
@@ -459,7 +459,7 @@ __global__ void kGaussianBlur(float* imgs, float* filter, float* target, const i
  */
 
 template<int B_Y, int B_X, int imgsPerThread, int chansPerThread, bool checkCaseBounds>
-__global__ void kBedOfNails(float* imgs, float* target, const int imgSize, const int numChannels,
+__global__ void kBedOfNails(hipLaunchParm lp, float* imgs, float* target, const int imgSize, const int numChannels,
                            const int numImages, const int startX, const int strideX, const int outputsX,
                            const bool reverse, const float scaleTargets, const float scaleOutput) {
     const int numImgBlocks = DIVUP(numImages,B_X*imgsPerThread);
@@ -745,7 +745,7 @@ void convGaussianBlur(NVMatrix& images, NVMatrix& filter, NVMatrix& target, bool
  */
 
 template<int imgsPerThread, int numFilters, bool checkCaseBounds>
-__global__ void kCNorm_fewfilter(float* imgs, float* meanDiffs, float* denoms, float* target, const int imgSize,
+__global__ void kCNorm_fewfilter(hipLaunchParm lp, float* imgs, float* meanDiffs, float* denoms, float* target, const int imgSize,
                                   const int numImages, const int sizeX, const float addScale, const float powScale) {
 
     const int imgPixels = imgSize * imgSize;
@@ -827,7 +827,7 @@ __global__ void kCNorm_fewfilter(float* imgs, float* meanDiffs, float* denoms, f
  * numFilters must be divisible by B_Y*filtersPerThread
  */
 template<int B_Y, int B_X, int imgsPerThread, int filtersPerThread, bool checkCaseBounds>
-__global__ void kCNorm_manyfilter(float* imgs, float* meanDiffs, float* denoms, float* target, const int imgSize,
+__global__ void kCNorm_manyfilter(hipLaunchParm lp, float* imgs, float* meanDiffs, float* denoms, float* target, const int imgSize,
                                   const int numFilters, const int numImages, const int sizeX, 
                                   const float addScale, const float powScale) {
     const int imgPixels = imgSize * imgSize;
@@ -922,7 +922,7 @@ __global__ void kCNorm_manyfilter(float* imgs, float* meanDiffs, float* denoms, 
  * reading than writing here, and the reading is all coalesced, so it should be OK.
  */
 template<int B_X, int imgsPerThread, int filtersPerThread, bool checkCaseBounds>
-__global__ void kCNorm2(float* imgs, float* meanDiffs, float* denoms, float* target, const int imgSize,
+__global__ void kCNorm2(hipLaunchParm lp, float* imgs, float* meanDiffs, float* denoms, float* target, const int imgSize,
                          const int numFilters, const int numImages, const int sizeX, const float addScale, const float powScale) {
     __shared__ float shDiffs[filtersPerThread][B_X*imgsPerThread];
     const int imgPixels = imgSize * imgSize;
@@ -1037,7 +1037,7 @@ __global__ void kCNorm2(float* imgs, float* meanDiffs, float* denoms, float* tar
  * numFilters must be divisible by B_Y
  */
 template<int B_Y, int B_X, int imgsPerThread, bool checkCaseBounds, bool blocked>
-__global__ void kFCNorm(float* imgs, float* meanDiffs, float* denoms, float* target, const int imgSize,
+__global__ void kFCNorm(hipLaunchParm lp, float* imgs, float* meanDiffs, float* denoms, float* target, const int imgSize,
                                   const int numFilters, const int numImages, const int sizeF, 
                                   const float addScale, const float powScale) {
     const int imgPixels = imgSize * imgSize;
@@ -1111,7 +1111,7 @@ __global__ void kFCNorm(float* imgs, float* meanDiffs, float* denoms, float* tar
  * TODO: this isn't really ideal
  */
 template<int B_Y, int B_X, int imgsPerThread, bool add, bool checkCaseBounds, bool blocked>
-__global__ void kFRNormUndo(float* outGrads, float* denoms, float* inputs, float* acts, float* target, const int imgSize, const int numFilters,
+__global__ void kFRNormUndo(hipLaunchParm lp, float* outGrads, float* denoms, float* inputs, float* acts, float* target, const int imgSize, const int numFilters,
                             const int numImages, const int sizeF, const float powScale, const float scaleTargets, const float scaleOutputs) {
     const int numImgBlocks = DIVUP(numImages,B_X*imgsPerThread);
     const int numFilterBlocks = numFilters/B_Y;
@@ -1199,7 +1199,7 @@ __global__ void kFRNormUndo(float* outGrads, float* denoms, float* inputs, float
  * TODO: write variant where each block does 4x4 region or so (this'll be based on kCNorm2).
  */
 template<int B_Y, int B_X, int imgsPerThread, int filtersPerThread, bool checkCaseBounds>
-__global__ void kTICA_manyfilter(float* imgs, float* target, const int imgSize,
+__global__ void kTICA_manyfilter(hipLaunchParm lp, float* imgs, float* target, const int imgSize,
                                      const int numFilters, const int numImages, const int sizeX,
                                      const float scaleTarget, const float scaleOutput) {
     const int imgPixels = imgSize * imgSize;
@@ -1295,7 +1295,7 @@ __global__ void kTICA_manyfilter(float* imgs, float* target, const int imgSize,
  * TODO: write variant where each block does 4x4 region or so (this'll be based on kCNorm2).
  */
 template<int B_Y, int B_X, int imgsPerThread, int filtersPerThread, bool checkCaseBounds>
-__global__ void kTICAGrad_manyfilter(float* imgs, float* ticas, float* target, const int imgSize,
+__global__ void kTICAGrad_manyfilter(hipLaunchParm lp, float* imgs, float* ticas, float* target, const int imgSize,
                                      const int numFilters, const int numImages, const int sizeX,
                                      const float scaleTarget, const float scaleOutput) {
     const int imgPixels = imgSize * imgSize;
@@ -1391,7 +1391,7 @@ __global__ void kTICAGrad_manyfilter(float* imgs, float* ticas, float* target, c
  */
 
 template<int B_Y, int B_X, int imgsPerThread, int filtersPerThread, bool add, bool checkCaseBounds>
-__global__ void kLocalAvgUndo(float* avgGrads, float* target, const int imgSize, const int numFilters,
+__global__ void kLocalAvgUndo(hipLaunchParm lp, float* avgGrads, float* target, const int imgSize, const int numFilters,
                               const int numImages, const int subsX, const int startX, const int strideX, const int outputsX,
                               const float scaleTargets, const float scaleOutputs) {
     const int numImgBlocks = DIVUP(numImages,B_X*imgsPerThread);
@@ -1495,7 +1495,7 @@ __global__ void kLocalAvgUndo(float* avgGrads, float* target, const int imgSize,
  */
 
 template<int B_Y, int B_X, int imgsPerThread, int filtersPerThread, bool add, bool checkCaseBounds>
-__global__ void kLocalMaxUndo(float* imgs, float* maxGrads, float* maxActs, float* target, const int imgSize, const int numFilters,
+__global__ void kLocalMaxUndo(hipLaunchParm lp, float* imgs, float* maxGrads, float* maxActs, float* target, const int imgSize, const int numFilters,
                               const int numImages, const int subsX, const int startX, const int strideX, const int outputsX,
                               const float scaleTargets, const float scaleOutputs) {
     __shared__ float shImgs[B_Y*filtersPerThread][B_X*imgsPerThread];
@@ -1591,7 +1591,7 @@ __global__ void kLocalMaxUndo(float* imgs, float* maxGrads, float* maxActs, floa
  * acts := -2 x scale x acts x outGrads / denoms
  */
 template<int B_X, int eltsPerThread>
-__global__ void kRNormUndoPrelims(float* acts, float* denoms, float* outGrads,
+__global__ void kRNormUndoPrelims(hipLaunchParm lp, float* acts, float* denoms, float* outGrads,
                                   const uint numElements, const float scale) {
     const uint e = B_X * hipBlockIdx_x * eltsPerThread + hipThreadIdx_x;
     const uint numThreads = B_X * hipGridDim_x;
@@ -1627,7 +1627,7 @@ __global__ void kRNormUndoPrelims(float* acts, float* denoms, float* outGrads,
  * TODO: this isn't really ideal
  */
 template<int B_Y, int B_X, int imgsPerThread, int filtersPerThread, bool add, bool checkCaseBounds>
-__global__ void kRNormUndo(float* outGrads, float* denoms, float* inputs, float* acts, float* target, const int imgSize, const int numFilters,
+__global__ void kRNormUndo(hipLaunchParm lp, float* outGrads, float* denoms, float* inputs, float* acts, float* target, const int imgSize, const int numFilters,
                               const int numImages, const int sizeX, const float powScale, const float scaleTargets, const float scaleOutputs) {
     const int numImgBlocks = DIVUP(numImages,B_X*imgsPerThread);
     const int numFilterBlocks = numFilters/(B_Y*filtersPerThread);
@@ -1742,7 +1742,7 @@ __global__ void kRNormUndo(float* outGrads, float* denoms, float* inputs, float*
  * reading than writing here, and the reading is all coalesced, so it should be OK.
  */
 template<int B_X, int imgsPerThread, int filtersPerThread, bool add, bool checkCaseBounds>
-__global__ void kRNormUndo2(float* outGrads, float* denoms, float* inputs, float* acts, float* target, const int imgSize, const int numFilters,
+__global__ void kRNormUndo2(hipLaunchParm lp, float* outGrads, float* denoms, float* inputs, float* acts, float* target, const int imgSize, const int numFilters,
                             const int numImages, const int sizeX, const float powScale, const float scaleTargets, const float scaleOutputs) {
     __shared__ float shActs[filtersPerThread][B_X*imgsPerThread];
     const int imgPixels = imgSize * imgSize;

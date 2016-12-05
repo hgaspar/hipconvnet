@@ -51,7 +51,7 @@
  * This version conserves shared memory by loading 16 filters at a time rather than 32.
  */
 template <int imgsPerThread, int numColors, bool scale, bool checkCaseBounds, bool conv>
-__global__ void img_acts_color(const float* hidActs, const float* filters, float* targets,
+__global__ void img_acts_color(hipLaunchParm lp, const float* hidActs, const float* filters, float* targets,
                                    const int numModulesY, const int numModulesX, const int numImages, const int numFilters,
                                    const int filterSize, const int imgSizeY, const int imgSizeX,
                                    const int paddingStart, const int moduleStride,
@@ -216,7 +216,7 @@ __global__ void img_acts_color(const float* hidActs, const float* filters, float
  * To be used when there are 4-16 color channels.
  */
 template <int imgsPerThread, int colorsPerThread,  bool scale, bool checkCaseBounds, bool conv>
-__global__ void img_acts_mediumcolor(const float* hidActs, const float* filters, float* targets,
+__global__ void img_acts_mediumcolor(hipLaunchParm lp, const float* hidActs, const float* filters, float* targets,
                                        const int numModulesY, const int numModulesX, const int numImages, const int numFilters,
                                        const int filterSize, const int imgSizeY, const int imgSizeX, const int paddingStart,
                                        const int moduleStride, const int numImgColors, const int numGroups,
@@ -391,7 +391,7 @@ __global__ void img_acts_mediumcolor(const float* hidActs, const float* filters,
  * To be used when there are >= 16 color channels.
  */
 template <int B_Y, int B_X, int imgsPerThread, int colorsPerThread, bool scale, bool checkCaseBounds, bool conv>
-__global__ void conv_img_acts_manycolor(const float* hidActs, const float* filters, float* targets,
+__global__ void conv_img_acts_manycolor(hipLaunchParm lp, const float* hidActs, const float* filters, float* targets,
                                           const int numModulesY, const int numModulesX, const int numImages, const int numFilters,
                                           const int filterSize, const int imgSizeY, const int imgSizeX, const int paddingStart, const int moduleStride,
                                           const int numImgColors, const int numGroups,
@@ -554,7 +554,7 @@ __global__ void conv_img_acts_manycolor(const float* hidActs, const float* filte
  * To be used when there are 4-16 color channels.
  */
 template <int imgsPerThread, int colorsPerThread, bool scale, bool checkCaseBounds, bool conv>
-__global__ void img_acts_mediumcolor_sparse_rand(const float* hidActs, const float* filters, float* targets, int* colorIndices,
+__global__ void img_acts_mediumcolor_sparse_rand(hipLaunchParm lp, const float* hidActs, const float* filters, float* targets, int* colorIndices,
                                                  const int numModulesY, const int numModulesX, const int numImages, const int numFilters,
                                                  const int filterSize, const int imgSizeY, const int imgSizeX, const int paddingStart, const int moduleStride,
                                                  const int numImgColors, const int numFilterColors, const int numGroups,
@@ -747,7 +747,7 @@ __global__ void img_acts_mediumcolor_sparse_rand(const float* hidActs, const flo
  * To be used when there are >= 16 color channels.
  */
 template <int B_Y, int B_X, int imgsPerThread, int colorsPerThread, bool scale, bool checkCaseBounds, bool conv>
-__global__ void img_acts_manycolor_sparse_rand(const float* hidActs, const float* filters, float* targets, int* colorIndices,
+__global__ void img_acts_manycolor_sparse_rand(hipLaunchParm lp, const float* hidActs, const float* filters, float* targets, int* colorIndices,
                                               const int numModulesY, const int numModulesX, const int numImages, const int numFilters,
                                               const int filterSize, const int imgSizeY, const int imgSizeX, const int paddingStart, const int moduleStride,
                                               const int numImgColors, const int numFilterColors, const int numGroups,

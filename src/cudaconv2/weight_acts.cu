@@ -56,7 +56,7 @@
  * so the compiler is messing up here somehow. It's unable to optimize that case away.
  */
 template <int B_Y, int B_X, int pixelsPerThread, int preloadCases, int numColors, bool scale, bool checkCaseBounds>
-__global__ void conv_weight_acts_c(float* images, float* hidActs, float* targets,
+__global__ void conv_weight_acts_c(hipLaunchParm lp, * images, float* hidActs, float* targets,
                                    const int numImages, const int numFilters,
                                    const int numModulesY, const int numModulesX,
                                    const int imgSizeY, const int imgSizeX, const int filterSize,
@@ -232,7 +232,7 @@ __global__ void conv_weight_acts_c(float* images, float* hidActs, float* targets
  * This routine is especially fast when numFilters >= 32. That's when it should be used.
  */
 template <int B_Y, int B_X, int filtersPerThread, int colorsPerThread, int preloadCases, bool scale, bool checkCaseBounds>
-__global__ void conv_weight_acts_mc_mf(float* images, float* hidActs, float* targets,
+__global__ void conv_weight_acts_mc_mf(hipLaunchParm lp, float* images, float* hidActs, float* targets,
                                        const int numImages, const int numFilters,
                                        const int numModulesY, const int numModulesX,
                                        const int imgSizeY, const int imgSizeX, const int filterSize,
@@ -412,7 +412,7 @@ __global__ void conv_weight_acts_mc_mf(float* images, float* hidActs, float* tar
  * This routine is especially fast when numFilters >= 32. That's when it should be used.
  */
 template <int B_Y, int B_X, int filtersPerThread, int colorsPerThread, int preloadCases, bool scale, bool checkCaseBounds>
-__global__ void conv_weight_acts_mc_mf_rand(float* images, float* hidActs, float* targets, int* colorIndices,
+__global__ void conv_weight_acts_mc_mf_rand(hipLaunchParm lp, float* images, float* hidActs, float* targets, int* colorIndices,
                                            const int numImages, const int numFilters,
                                            const int numModulesY, const int numModulesX,
                                            const int imgSizeY, const int imgSizeX, const int filterSize,

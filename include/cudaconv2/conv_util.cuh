@@ -125,7 +125,7 @@ public:
  */
 
 template<class Agg, int B_Y, int B_X, int imgsPerThread, int filtersPerThread, bool checkCaseBounds>
-__global__ void kLocalPool(float* imgs, float* target, const int imgSize, const int numFilters,
+__global__ void kLocalPool(hipLaunchParm lp, float* imgs, float* target, const int imgSize, const int numFilters,
                            const int numImages, const int subsX, const int startX, const int strideX,
                            const int outputsX, Agg agg) {
     const int numImgBlocks = DIVUP(numImages,B_X*imgsPerThread);
@@ -218,7 +218,7 @@ __global__ void kLocalPool(float* imgs, float* target, const int imgSize, const 
  * To be used when the stride is 1 and the pooling region is fairly large.
  */
 template<class Agg, int B_X, int imgsPerThread, int filtersPerThread, bool checkCaseBounds>
-__global__ void kLocalPool2(float* imgs, float* target, const int imgSize, const int numFilters,
+__global__ void kLocalPool2(hipLaunchParm lp, float* imgs, float* target, const int imgSize, const int numFilters,
                            const int numImages, const int subsX, const int startX,
                            const int outputsX, Agg agg) {
     __shared__ float shImgs[filtersPerThread][B_X*imgsPerThread];

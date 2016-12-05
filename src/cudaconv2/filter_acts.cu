@@ -56,7 +56,7 @@
  */
 template <int B_Y, int B_X, int imgsPerThread, int filtersPerThread, int numColors,
           bool scale, bool checkImgBounds>
-__global__ void filterActs_YxX_color(float* images, float* filters, float* targets,
+__global__ void filterActs_YxX_color(hipLaunchParm lp, float* images, float* filters, float* targets,
                                    const int numImages, const int numFilters,
                                    const int imgSizeY, const int imgSizeX, const int filterSize, const int paddingStart,
                                    const int moduleStride,
@@ -223,7 +223,7 @@ __global__ void filterActs_YxX_color(float* images, float* filters, float* targe
  */
 template <int B_Y, int B_X, int imgsPerThread, int filtersPerThread, int colorCache,
           bool scale, bool checkImgBounds>
-__global__ void filterActs_YxX_sparse(float* images, float* filters, float* targets,
+__global__ void filterActs_YxX_sparse(hipLaunchParm lp, float* images, float* filters, float* targets,
                                        const int numImages, const int numFilters,
                                        const int imgSizeY, const int imgSizeX, const int filterSize, const int paddingStart,
                                        const int moduleStride,
@@ -399,7 +399,7 @@ __global__ void filterActs_YxX_sparse(float* images, float* filters, float* targ
  * The imgSize here is the size of the actual image without the padding.
  */
 template <int B_Y, int B_X, int imgsPerThread, int filtersPerThread, int colorCache, bool scale, bool checkImgBounds>
-__global__ void filterActs_YxX_sparse_random(float* images, float* filters, float* targets, int* colorIndices,
+__global__ void filterActs_YxX_sparse_random(hipLaunchParm lp, float* images, float* filters, float* targets, int* colorIndices,
                                              const int numImages, const int numFilters,
                                              const int imgSizeY, const int imgSizeX, const int filterSize, const int paddingStart,
                                              const int moduleStride,

@@ -39,7 +39,7 @@
  * 
  * target:          (1, numCases)
  */
-__global__ void kLogregCost(float* probs, float* labels, float* maxProbs, float* labelLogProbs, float* correctProbs,
+__global__ void kLogregCost(hipLaunchParm lp, float* probs, float* labels, float* maxProbs, float* labelLogProbs, float* correctProbs,
                             const int numCases, const int numOut) {
     const int tx = hipBlockIdx_x * LOGREG_ERR_THREADS_X + hipThreadIdx_x;
 
@@ -82,7 +82,7 @@ __global__ void kLogregCost(float* probs, float* labels, float* maxProbs, float*
  * dE_dy_l: (numOut, numCases)
  */
 template <bool add>
-__global__ void kLogregCostGrad(float* y_l, float* labels, float* dE_dy_l, const int numCases,
+__global__ void kLogregCostGrad(hipLaunchParm lp, float* y_l, float* labels, float* dE_dy_l, const int numCases,
                                  const int numOut, const float gradCoeff) {
     const int tx = hipBlockIdx_x * LOGREG_GRAD_THREADS_X + hipThreadIdx_x;
     const int ty = hipBlockIdx_y * LOGREG_GRAD_THREADS_Y + hipThreadIdx_y;
@@ -107,7 +107,7 @@ __global__ void kLogregCostGrad(float* y_l, float* labels, float* dE_dy_l, const
  * dE_dx_l: (numOut, numCases)
  */
 template <bool add>
-__global__ void kSoftmaxGrad(float* dE_dy_l, float* y_l, float* dE_dx_l, const int numCases, const int numOut) {
+__global__ void kSoftmaxGrad(hipLaunchParm lp, float* dE_dy_l, float* y_l, float* dE_dx_l, const int numCases, const int numOut) {
     const int tx = hipBlockIdx_x * LOGREG_GRAD_THREADS_X + hipThreadIdx_x;
     const int ty = hipBlockIdx_y * LOGREG_GRAD_THREADS_Y + hipThreadIdx_y;
     const int tidx = ty * numCases + tx;
@@ -135,7 +135,7 @@ __global__ void kSoftmaxGrad(float* dE_dy_l, float* y_l, float* dE_dx_l, const i
  * dE_dx_l: (numOut, numCases)
  */
 template <bool add>
-__global__ void kLogregSoftmaxGrad(float* y_l, float* labels, float* dE_dx_l, const int numCases,
+__global__ void kLogregSoftmaxGrad(hipLaunchParm lp, float* y_l, float* labels, float* dE_dx_l, const int numCases,
                                  const int numOut, const float gradCoeff) {
     const int tx = hipBlockIdx_x * LOGREG_GRAD_THREADS_X + hipThreadIdx_x;
     const int ty = hipBlockIdx_y * LOGREG_GRAD_THREADS_Y + hipThreadIdx_y;
@@ -153,7 +153,7 @@ __global__ void kLogregSoftmaxGrad(float* y_l, float* labels, float* dE_dx_l, co
 }
 
 template <int B_X, bool add>
-__global__ void kEltwiseMaxGrad(float* actGrad, float* input, float* output, float* target,
+__global__ void kEltwiseMaxGrad(hipLaunchParm lp, float* actGrad, float* input, float* output, float* target,
                                 const int numElements) {
     for (int i = B_X * hipBlockIdx_x + hipThreadIdx_x; i < numElements; i += B_X * hipGridDim_x) {
         if (add) {
