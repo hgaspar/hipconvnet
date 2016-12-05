@@ -28,7 +28,7 @@
 #include <hip/hip_runtime.h>
 #include <nvmatrix_kernels.cuh>
 
-__global__ void kTile(const float* src, float* tgt, const uint srcWidth, const uint srcHeight, const uint tgtWidth, const uint tgtHeight) {
+__global__ void kTile(hipLaunchParm lp,const float* src, float* tgt, const uint srcWidth, const uint srcHeight, const uint tgtWidth, const uint tgtHeight) {
     const int idx = hipBlockIdx_x * hipBlockDim_x + hipThreadIdx_x;
     const int numThreads = hipBlockDim_x * hipGridDim_x;
     //    const unsigned int numEls = tgtWidth * tgtHeight;
@@ -41,7 +41,7 @@ __global__ void kTile(const float* src, float* tgt, const uint srcWidth, const u
     }
 }
 
-__global__ void kDotProduct_r(float* a, float* b, float* target, const uint numCols, const uint numElements) {
+__global__ void kDotProduct_r(hipLaunchParm lp, float* a, float* b, float* target, const uint numCols, const uint numElements) {
     __shared__ float shmem[DP_BLOCKSIZE];
 
     uint eidx = DP_BLOCKSIZE * hipBlockIdx_x + hipThreadIdx_x;
@@ -78,7 +78,7 @@ __global__ void kDotProduct_r(float* a, float* b, float* target, const uint numC
     }
 }
 
-__global__ void kSetupCurand(curandState *state, unsigned long long seed) {
+__global__ void kSetupCurand(hipLaunchParm lp, curandState *state, unsigned long long seed) {
     const uint tidx = NUM_RND_THREADS_PER_BLOCK * hipBlockIdx_x + hipThreadIdx_x;
     /* Each thread gets same seed, a different sequence number,
      no offset */

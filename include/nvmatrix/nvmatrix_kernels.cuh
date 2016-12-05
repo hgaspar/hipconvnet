@@ -80,16 +80,16 @@
 #define LOG_WARP_SIZE             5
 #define AWR_LOG_NUM_WARPS         3
 
-__global__ void kTile(const float* src, float* tgt, const uint srcWidth, const uint srcHeight, const uint tgtWidth, const uint tgtHeight);
-__global__ void kDotProduct_r(float* a, float* b, float* target, const uint numCols, const uint numElements);
-__global__ void kSetupCurand(curandState *state, unsigned long long seed);
+__global__ void kTile(hipLaunchParm lp, const float* src, float* tgt, const uint srcWidth, const uint srcHeight, const uint tgtWidth, const uint tgtHeight);
+__global__ void kDotProduct_r(hipLaunchParm lp, float* a, float* b, float* target, const uint numCols, const uint numElements);
+__global__ void kSetupCurand(hipLaunchParm lp, curandState *state, unsigned long long seed);
 
 
 /*
  * For now this is supported only for arrays with the same transposedness.
  */
 template<class Op>
-__global__ void kEltwiseTernaryOp(const float* a, const float* b, const float* c, float* const dest,
+__global__ void kEltwiseTernaryOp(hipLaunchParm lp, const float* a, const float* b, const float* c, float* const dest,
                                   const uint height, const uint width, uint strideA, const uint strideB, const uint strideC,
                                   const uint strideDest, Op op) {
     const uint idxX = hipBlockIdx_x * ELTWISE_THREADS_X + hipThreadIdx_x;
@@ -110,7 +110,7 @@ __global__ void kEltwiseTernaryOp(const float* a, const float* b, const float* c
  * Performs dest := op(a, b)
  */
 template<class Op, bool checkBounds, bool aTrans, bool reverse>
-__global__ void kEltwiseBinaryOpTrans(const float* a, const float* b, float* const dest,
+__global__ void kEltwiseBinaryOpTrans(hipLaunchParm lp, const float* a, const float* b, float* const dest,
                              const uint height, const uint width,
                              const uint strideA, const uint strideB, const uint strideDest, Op op) {
 
@@ -152,7 +152,7 @@ __global__ void kEltwiseBinaryOpTrans(const float* a, const float* b, float* con
     }
 }
 template<class Op>
-__global__ void kEltwiseBinaryOp(const float* a, const float* b, float* const dest, const uint height, const uint width,
+__global__ void kEltwiseBinaryOp(hipLaunchParm lp, const float* a, const float* b, float* const dest, const uint height, const uint width,
                              const uint strideA, const uint strideB, const uint strideDest, Op op) {
     const uint idxX = hipBlockIdx_x * ELTWISE_THREADS_X + hipThreadIdx_x;
     const uint idxY = hipBlockIdx_y * ELTWISE_THREADS_Y + hipThreadIdx_y;
@@ -168,7 +168,7 @@ __global__ void kEltwiseBinaryOp(const float* a, const float* b, float* const de
  * dest here is assumed to be "not transposed" -- height and width correspond to it.
  */
 template<class Op, bool checkBounds>
-__global__ void kEltwiseUnaryOpTrans(const float* a, float* const dest,
+__global__ void kEltwiseUnaryOpTrans(hipLaunchParm lp, const float* a, float* const dest,
                                      const uint height, const uint width,
                                      const uint strideA, const uint strideDest, Op op) {
 
@@ -199,7 +199,7 @@ __global__ void kEltwiseUnaryOpTrans(const float* a, float* const dest,
 }
 
 template<class Op>
-__global__ void kEltwiseUnaryOp(const float* a, float* const dest, const uint height, const uint width,
+__global__ void kEltwiseUnaryOp(hipLaunchParm lp, const float* a, float* const dest, const uint height, const uint width,
                                 const uint strideA, const uint strideDest, Op op) {
     const uint idxX = hipBlockIdx_x * ELTWISE_THREADS_X + hipThreadIdx_x;
     const uint idxY = hipBlockIdx_y * ELTWISE_THREADS_Y + hipThreadIdx_y;
@@ -215,7 +215,7 @@ __global__ void kEltwiseUnaryOp(const float* a, float* const dest, const uint he
  * Matrix in ROW-MAJOR order!
  */
 template <class Op>
-__global__ void kRowVectorOp(const float* mat, const float* vec, float* const tgtMat, const uint width, const uint height,
+__global__ void kRowVectorOp(hipLaunchParm lp, const float* mat, const float* vec, float* const tgtMat, const uint width, const uint height,
                              const uint matStride, const uint tgtStride, Op op) {
     __shared__ float shVec[ADD_VEC_THREADS_X];
     const uint bx = ADD_VEC_THREADS_X * hipBlockIdx_x;
@@ -240,7 +240,7 @@ __global__ void kRowVectorOp(const float* mat, const float* vec, float* const tg
  * Matrix in ROW-MAJOR order!
  */
 template <class Op>
-__global__ void kColVectorOp(const float* mat, const float* vec, float* const tgtMat,
+__global__ void kColVectorOp(hipLaunchParm lp, const float* mat, const float* vec, float* const tgtMat,
                              const uint width, const uint height,
                              const uint matStride, const uint tgtStride, Op op) {
     __shared__ float shVec[ADD_VEC_THREADS_Y];
@@ -270,7 +270,7 @@ __global__ void kColVectorOp(const float* mat, const float* vec, float* const tg
  * must either be summed again (recursively) or summed on the host.
  */
 template<class Agg, class BinaryOp, int blockSize>
-__global__ void kAggRows(const float* mat, float* matSum, const uint width, const uint height, const uint sumWidth, Agg agg, BinaryOp op) {
+__global__ void kAggRows(hipLaunchParm lp, const float* mat, float* matSum, const uint width, const uint height, const uint sumWidth, Agg agg, BinaryOp op) {
     const int idxX = hipBlockIdx_x * blockSize*2 + hipThreadIdx_x;
 
     __shared__ float accum[blockSize*2];
@@ -333,7 +333,7 @@ __global__ void kAggRows(const float* mat, float* matSum, const uint width, cons
 }
 
 template<class Agg, class BinaryOp>
-__global__ void kAggRows_wholerow(const float* mat, float* matSum, const uint width, const uint height, Agg agg, BinaryOp op) {
+__global__ void kAggRows_wholerow(hipLaunchParm lp, const float* mat, float* matSum, const uint width, const uint height, Agg agg, BinaryOp op) {
     const int tidx = hipThreadIdx_x;
 
     __shared__ float accum[AWR_NUM_THREADS];
@@ -379,7 +379,7 @@ __global__ void kAggRows_wholerow(const float* mat, float* matSum, const uint wi
  * Not really useful for pure reductions but neat nonetheless.
  */
 template<class Agg, class BinaryOp>
-__global__ void kAggRows_wholerow_nosync(const float* mat, float* matSum, const uint width, const uint height,
+__global__ void kAggRows_wholerow_nosync( hipLaunchParm lp, const float* mat, float* matSum, const uint width, const uint height,
                                          Agg agg, BinaryOp op) {
     const uint tidx = hipThreadIdx_x;
     const uint warpIdx = tidx / WARP_SIZE;
@@ -434,7 +434,7 @@ __global__ void kAggRows_wholerow_nosync(const float* mat, float* matSum, const 
  */
 //#define AGG_SHORT_ROWS_LOOPS_X  4
 template <class Agg, class BinaryOp, int LOOPS_X, int THREADS_X>
-__global__ void kAggShortRows(const float* mat, float* matSum, const uint width, const uint height, Agg agg, BinaryOp op) {
+__global__ void kAggShortRows( hipLaunchParm lp, const float* mat, float* matSum, const uint width, const uint height, Agg agg, BinaryOp op) {
     const uint shmemX = THREADS_X + 1;
     __shared__ float shmem[AGG_SHORT_ROWS_THREADS_Y*shmemX];
 
@@ -490,7 +490,7 @@ __global__ void kAggShortRows(const float* mat, float* matSum, const uint width,
 }
 
 template <class Agg, class BinaryOp>
-__global__ void kAggShortRows2(const float* mat, float* matSum, const uint width, const uint height, Agg agg, BinaryOp op) {
+__global__ void kAggShortRows2( hipLaunchParm lp,  float* mat, float* matSum, const uint width, const uint height, Agg agg, BinaryOp op) {
     const uint shmemX = AGG_SHORT_ROWS_THREADS_X + 1;
     __shared__ float shmem[AGG_SHORT_ROWS_THREADS_Y*shmemX];
     const uint LOOPS_X = DIVUP(width, AGG_SHORT_ROWS_THREADS_X);
@@ -542,7 +542,7 @@ __global__ void kAggShortRows2(const float* mat, float* matSum, const uint width
  * Bad when there are few columns.
  */
 template <class Agg, class BinaryOp>
-__global__ void kDumbAggCols(const float* mat, float* const vec, const uint width, const uint height, Agg agg, BinaryOp op) {
+__global__ void kDumbAggCols(hipLaunchParm lp, const float* mat, float* const vec, const uint width, const uint height, Agg agg, BinaryOp op) {
     const uint idx = hipBlockIdx_x * hipBlockDim_x + hipThreadIdx_x;
     mat += idx;
     if (idx < width) {
@@ -557,7 +557,7 @@ __global__ void kDumbAggCols(const float* mat, float* const vec, const uint widt
 }
 
 template <class Agg>
-__global__ void kTotalAgg(const float* a, float* const target, const uint numCols, const uint numElements, Agg agg) {
+__global__ void kTotalAgg(hipLaunchParm lp, const float* a, float* const target, const uint numCols, const uint numElements, Agg agg) {
     __shared__ float shmem[DP_BLOCKSIZE];
     uint eidx = DP_BLOCKSIZE * hipBlockIdx_x + hipThreadIdx_x;
     shmem[hipThreadIdx_x] = agg.getBaseValue();
@@ -645,7 +645,7 @@ public:
 };
 
 template<class Randomizer>
-__global__ void kUnaryRandomize(float* data, float* targets, curandState* state, const uint numElements, Randomizer rnd) {
+__global__ void kUnaryRandomize(hipLaunchParm lp, float* data, float* targets, curandState* state, const uint numElements, Randomizer rnd) {
     const uint tidx = NUM_RND_THREADS_PER_BLOCK * hipBlockIdx_x + hipThreadIdx_x;
     curandState localState = state[tidx];
 
@@ -656,7 +656,7 @@ __global__ void kUnaryRandomize(float* data, float* targets, curandState* state,
 }
 
 template<class Randomizer>
-__global__ void kBinaryRandomize(float* data, float* data2, float* targets, curandState* state, const uint numElements, Randomizer rnd) {
+__global__ void kBinaryRandomize(hipLaunchParm lp, float* data, float* data2, float* targets, curandState* state, const uint numElements, Randomizer rnd) {
     const uint tidx = NUM_RND_THREADS_PER_BLOCK * hipBlockIdx_x + hipThreadIdx_x;
     curandState localState = state[tidx];
 
