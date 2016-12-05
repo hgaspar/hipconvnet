@@ -1,3 +1,4 @@
+#include "hip/hip_runtime.h"
 /* 
  * Copyright (c) 2011, Alex Krizhevsky (akrizhevsky@gmail.com)
  * All rights reserved.
@@ -203,7 +204,7 @@ void NVMatrix::rightMult(const NVMatrix &b, float scaleAB, NVMatrix &target) con
                 scaleAB, _devData, getLeadingDim(), b.getDevData(), b.getLeadingDim(),
                 0, target.getDevData(), getNumRows());
     checkCublasError("cublasSgemm failed");
-//    cudaThreadSynchronize();
+//    hipDeviceSynchronize();
 }
 
 void NVMatrix::rightMult(const NVMatrix &b, float scaleAB) {
@@ -235,7 +236,7 @@ void NVMatrix::addProduct(const NVMatrix& a, const NVMatrix &b, float scaleThis,
                 scaleAB, a.getDevData(), a.getLeadingDim(), b.getDevData(), b.getLeadingDim(),
                 scaleThis, _devData, getLeadingDim());
     checkCublasError("cublasSgemm failed");
-//    cudaThreadSynchronize();
+//    hipDeviceSynchronize();
 }
 
 void NVMatrix::addProduct(const NVMatrix& a, const NVMatrix &b) {
@@ -250,7 +251,7 @@ void NVMatrix::_unaryRandomize(NVMatrix& target, Randomizer rnd) {
         target.resize(*this);
     }
     assert(isTrans() == target.isTrans());
-    kUnaryRandomize<<<NUM_RND_BLOCKS,NUM_RND_THREADS_PER_BLOCK>>>(getDevData(), target.getDevData(), getCurandState(), getNumElements(), rnd);
+    hipLaunchKernel(HIP_KERNEL_NAME(kUnaryRandomize), dim3(NUM_RND_BLOCKS), dim3(NUM_RND_THREADS_PER_BLOCK), 0, 0, getDevData(), target.getDevData(), getCurandState(), getNumElements(), rnd);
     cutilCheckMsg("kUnaryRandomize: Kernel execution failed");
 }
 
@@ -264,7 +265,7 @@ void NVMatrix::_binaryRandomize(NVMatrix& data2, NVMatrix& target, Randomizer rn
         target.resize(*this);
     }
     assert(isTrans() == target.isTrans());
-    kBinaryRandomize<<<NUM_RND_BLOCKS,NUM_RND_THREADS_PER_BLOCK>>>(getDevData(), data2.getDevData(), target.getDevData(), getCurandState(), getNumElements(), rnd);
+    hipLaunchKernel(HIP_KERNEL_NAME(kBinaryRandomize), dim3(NUM_RND_BLOCKS), dim3(NUM_RND_THREADS_PER_BLOCK), 0, 0, getDevData(), data2.getDevData(), target.getDevData(), getCurandState(), getNumElements(), rnd);
     cutilCheckMsg("kBinaryRandomize: Kernel execution failed");
 }
 
@@ -273,9 +274,9 @@ void NVMatrix::initRandom(unsigned long long seed) {
     pthread_mutex_lock(_rndMutex);
     int d = getDeviceID();
     rndDevStates[d] = NULL;
-    CUDA_CALL(cudaMalloc((void **)&rndDevStates[d], NUM_RND_STREAMS * sizeof(curandState)));
+    CUDA_CALL(hipMalloc((void **)&rndDevStates[d], NUM_RND_STREAMS * sizeof(curandState)));
     pthread_mutex_unlock(_rndMutex);
-    kSetupCurand<<<NUM_RND_BLOCKS, NUM_RND_THREADS_PER_BLOCK>>>(getCurandState(), 1 + seed*2); // so there's no chance it'll be correlated with the other one
+    hipLaunchKernel(HIP_KERNEL_NAME(kSetupCurand), dim3(NUM_RND_BLOCKS), dim3(NUM_RND_THREADS_PER_BLOCK), 0, 0, getCurandState(), 1 + seed*2); // so there's no chance it'll be correlated with the other one
     cutilCheckMsg("initRandom: Kernel execution failed");
 }
 
@@ -294,7 +295,7 @@ curandState* NVMatrix::getCurandState() {
 
 int NVMatrix::getDeviceID() {
     int d;
-    cudaGetDevice(&d);
+    hipGetDevice(&d);
     return d;
 }
 
@@ -310,7 +311,7 @@ void NVMatrix::destroyRandom() {
     int d = getDeviceID();
     
     pthread_mutex_lock(_rndMutex);
-    CUDA_CALL(cudaFree(rndDevStates[d]));
+    CUDA_CALL(hipFree(rndDevStates[d]));
     rndDevStates.erase(d);
     pthread_mutex_unlock(_rndMutex);
 }
@@ -642,9 +643,9 @@ void NVMatrix::tile(int timesY, int timesX, NVMatrix& target) {
     target.resize(_numRows*timesY, _numCols*timesX);
     target.setTrans(_isTrans);
     if(!isTrans()) {
-        kTile<<<NUM_TILE_BLOCKS,NUM_TILE_THREADS_PER_BLOCK>>>(_devData, target._devData, _numCols, _numRows, target._numCols, target._numRows);
+        hipLaunchKernel(HIP_KERNEL_NAME(kTile), dim3(NUM_TILE_BLOCKS), dim3(NUM_TILE_THREADS_PER_BLOCK), 0, 0, _devData, target._devData, _numCols, _numRows, target._numCols, target._numRows);
     } else {
-        kTile<<<NUM_TILE_BLOCKS,NUM_TILE_THREADS_PER_BLOCK>>>(_devData, target._devData, _numRows, _numCols, target._numRows, target._numCols);
+        hipLaunchKernel(HIP_KERNEL_NAME(kTile), dim3(NUM_TILE_BLOCKS), dim3(NUM_TILE_THREADS_PER_BLOCK), 0, 0, _devData, target._devData, _numRows, _numCols, target._numRows, target._numCols);
     }
     cutilCheckMsg("Kernel execution failed");
 }
@@ -712,7 +713,7 @@ void NVMatrix::_aggregate(int axis, NVMatrix& target, Agg agg, BinaryOp op) {
         int numBlocks = DIVUP(width, NUM_SUM_COLS_THREADS_PER_BLOCK);
         assert(numBlocks * NUM_SUM_COLS_THREADS_PER_BLOCK >= width);
         assert(numBlocks < NUM_BLOCKS_MAX);
-        kDumbAggCols<Agg, BinaryOp><<<numBlocks,NUM_SUM_COLS_THREADS_PER_BLOCK>>>(_devData, target._devData, width, height, agg, op);
+        hipLaunchKernel(HIP_KERNEL_NAME(kDumbAggCols<Agg, BinaryOp>), dim3(numBlocks), dim3(NUM_SUM_COLS_THREADS_PER_BLOCK), 0, 0, _devData, target._devData, width, height, agg, op);
         cutilCheckMsg("kDumbAggCols: Kernel execution failed");
     } else { // row sum
         target.resize(_isTrans ? 1 : _numRows, _isTrans ? _numCols : 1);
@@ -729,36 +730,36 @@ void NVMatrix::_aggregate(int axis, NVMatrix& target, Agg agg, BinaryOp op) {
                 dim3 grid(numBlocksX, numBlocksY), threads(numThreadsX, numThreadsY);
                 if(width <= 16) {
                     if(width <= 4) {
-                        kAggShortRows<Agg, BinaryOp, 1, 4><<<grid, threads>>>(_devData, target._devData,width, height, agg, op);
+                        hipLaunchKernel(HIP_KERNEL_NAME(kAggShortRows<Agg, BinaryOp, 1, 4>), dim3(grid), dim3(threads), 0, 0, _devData, target._devData,width, height, agg, op);
                     } else if(width <= 8) {
-                        kAggShortRows<Agg, BinaryOp, 1, 8><<<grid, threads>>>(_devData, target._devData,width, height, agg, op);
+                        hipLaunchKernel(HIP_KERNEL_NAME(kAggShortRows<Agg, BinaryOp, 1, 8>), dim3(grid), dim3(threads), 0, 0, _devData, target._devData,width, height, agg, op);
                     } else if(width <= 12) {
-                        kAggShortRows<Agg, BinaryOp, 1, 12><<<grid, threads>>>(_devData, target._devData,width, height, agg, op);
+                        hipLaunchKernel(HIP_KERNEL_NAME(kAggShortRows<Agg, BinaryOp, 1, 12>), dim3(grid), dim3(threads), 0, 0, _devData, target._devData,width, height, agg, op);
                     } else {
-                        kAggShortRows<Agg, BinaryOp, 1, 16><<<grid, threads>>>(_devData, target._devData,width, height, agg, op);
+                        hipLaunchKernel(HIP_KERNEL_NAME(kAggShortRows<Agg, BinaryOp, 1, 16>), dim3(grid), dim3(threads), 0, 0, _devData, target._devData,width, height, agg, op);
                     }
                 } else if(width <= 32) {
-                    kAggShortRows<Agg, BinaryOp, 2, AGG_SHORT_ROWS_THREADS_X><<<grid, threads>>>(_devData, target._devData,width, height, agg, op);
+                    hipLaunchKernel(HIP_KERNEL_NAME(kAggShortRows<Agg, BinaryOp, 2, AGG_SHORT_ROWS_THREADS_X>), dim3(grid), dim3(threads), 0, 0, _devData, target._devData,width, height, agg, op);
                 } else if(width <= 48){
-                    kAggShortRows<Agg, BinaryOp, 3, AGG_SHORT_ROWS_THREADS_X><<<grid, threads>>>(_devData, target._devData,width, height, agg, op);
+                    hipLaunchKernel(HIP_KERNEL_NAME(kAggShortRows<Agg, BinaryOp, 3, AGG_SHORT_ROWS_THREADS_X>), dim3(grid), dim3(threads), 0, 0, _devData, target._devData,width, height, agg, op);
                 } else if(width <= 64){
-                    kAggShortRows<Agg, BinaryOp, 4, AGG_SHORT_ROWS_THREADS_X><<<grid, threads>>>(_devData, target._devData,width, height, agg, op);
+                    hipLaunchKernel(HIP_KERNEL_NAME(kAggShortRows<Agg, BinaryOp, 4, AGG_SHORT_ROWS_THREADS_X>), dim3(grid), dim3(threads), 0, 0, _devData, target._devData,width, height, agg, op);
                 } else {
-                    kAggShortRows2<Agg, BinaryOp><<<grid, threads>>>(_devData, target._devData,width, height, agg, op);
+                    hipLaunchKernel(HIP_KERNEL_NAME(kAggShortRows2<Agg, BinaryOp>), dim3(grid), dim3(threads), 0, 0, _devData, target._devData,width, height, agg, op);
                 }
             } else {
                 if (width >= 512) {
                     dim3 threads(AWR_NUM_THREADS);
                     dim3 blocks(1, std::min(1024, height));
-                    kAggRows_wholerow_nosync<<<blocks, threads>>>(_devData, target._devData, width, height, agg, op);
+                    hipLaunchKernel(HIP_KERNEL_NAME(kAggRows_wholerow_nosync), dim3(blocks), dim3(threads), 0, 0, _devData, target._devData, width, height, agg, op);
 //                    dim3 threads(AWR_NUM_THREADS);
 //                    dim3 blocks(1, std::min(1024, height));
-//                    kAggRows_wholerow<<<blocks, threads>>>(_devData, target._devData, width, height, agg, op);
+//                    hipLaunchKernel(HIP_KERNEL_NAME(kAggRows_wholerow), dim3(blocks), dim3(threads), 0, 0, _devData, target._devData, width, height, agg, op);
                     
                 } else {
 //                    dim3 threads(AWR_NUM_THREADS);
 //                    dim3 blocks(1, std::min(1024, height));
-//                    kAggRows_wholerow<<<blocks, threads>>>(_devData, target._devData, width, height, agg, op);
+//                    hipLaunchKernel(HIP_KERNEL_NAME(kAggRows_wholerow), dim3(blocks), dim3(threads), 0, 0, _devData, target._devData, width, height, agg, op);
                     NVMatrix *prevSum = this;
                     while (prevSum->getLeadingDim() > 1) {
                         int numThreadsX = width <= 64 ? 32 : (width <= 128 ? 64 : (width <= 256 ? 128 : (width <= 512 ? 256 : 512)));
@@ -772,23 +773,23 @@ void NVMatrix::_aggregate(int axis, NVMatrix& target, Agg agg, BinaryOp op) {
                         assert(numBlocksY <= NUM_BLOCKS_MAX);
 
                         if(width <= 64) {
-                            kAggRows<Agg, BinaryOp, 32><<<grid, threads>>>(prevSum->_devData, nvSumAccum->_devData,
+                            hipLaunchKernel(HIP_KERNEL_NAME(kAggRows<Agg, BinaryOp, 32>), dim3(grid), dim3(threads), 0, 0, prevSum->_devData, nvSumAccum->_devData,
                                                        width, height, nvSumAccum->getLeadingDim(), agg, op);
                         } else if(width <= 128) {
-                            kAggRows<Agg, BinaryOp, 64><<<grid, threads>>>(prevSum->_devData, nvSumAccum->_devData,
+                            hipLaunchKernel(HIP_KERNEL_NAME(kAggRows<Agg, BinaryOp, 64>), dim3(grid), dim3(threads), 0, 0, prevSum->_devData, nvSumAccum->_devData,
                                                        width, height, nvSumAccum->getLeadingDim(), agg, op);
                         } else if(width <= 256) {
-                            kAggRows<Agg, BinaryOp, 128><<<grid, threads>>>(prevSum->_devData, nvSumAccum->_devData,
+                            hipLaunchKernel(HIP_KERNEL_NAME(kAggRows<Agg, BinaryOp, 128>), dim3(grid), dim3(threads), 0, 0, prevSum->_devData, nvSumAccum->_devData,
                                                        width, height, nvSumAccum->getLeadingDim(), agg, op);
                         } else if(width <= 512) {
-                            kAggRows<Agg, BinaryOp, 256><<<grid, threads>>>(prevSum->_devData, nvSumAccum->_devData,
+                            hipLaunchKernel(HIP_KERNEL_NAME(kAggRows<Agg, BinaryOp, 256>), dim3(grid), dim3(threads), 0, 0, prevSum->_devData, nvSumAccum->_devData,
                                                        width, height, nvSumAccum->getLeadingDim(), agg, op);
                         } else {
-                            kAggRows<Agg, BinaryOp, 512><<<grid, threads>>>(prevSum->_devData, nvSumAccum->_devData,
+                            hipLaunchKernel(HIP_KERNEL_NAME(kAggRows<Agg, BinaryOp, 512>), dim3(grid), dim3(threads), 0, 0, prevSum->_devData, nvSumAccum->_devData,
                                                        width, height, nvSumAccum->getLeadingDim(), agg, op);
                         }
                         cutilCheckMsg("agg rows: Kernel execution failed");
-                        cudaThreadSynchronize();
+                        hipDeviceSynchronize();
                         width = numBlocksX; // only true in reduction agg, but for linear agg this doesn't matter anyway
 
                         if (prevSum != this) {
@@ -955,9 +956,9 @@ float NVMatrix::_totalAgg(Agg agg) {
     for (NVMatrix* target = NULL; src->getNumElements() > CPUSUM_MAX; src = target) {
         _sum_setParams(src->getNumElements(), &blocks, &threads, &numCols);
         target = new NVMatrix(1, blocks.x);
-        kTotalAgg<<<blocks, threads>>>(src->getDevData(), target->getDevData(), numCols, src->getNumElements(), agg);
+        hipLaunchKernel(HIP_KERNEL_NAME(kTotalAgg), dim3(blocks), dim3(threads), 0, 0, src->getDevData(), target->getDevData(), numCols, src->getNumElements(), agg);
         cutilCheckMsg("kTotalAgg: Kernel execution failed");
-        cudaThreadSynchronize(); // not really necessary?
+        hipDeviceSynchronize(); // not really necessary?
         delete (src == this ? NULL : src);
     }
 
@@ -989,9 +990,9 @@ float NVMatrix::dotProduct(NVMatrix& b) {
     int numCols;
     _sum_setParams(getNumElements(), &blocks, &threads, &numCols);
     NVMatrix target(1, blocks.x);
-    kDotProduct_r<<<blocks, threads>>>(getDevData(), b.getDevData(), target.getDevData(), numCols, getNumElements());
+    hipLaunchKernel(HIP_KERNEL_NAME(kDotProduct_r), dim3(blocks), dim3(threads), 0, 0, getDevData(), b.getDevData(), target.getDevData(), numCols, getNumElements());
     cutilCheckMsg("kDotProduct: Kernel execution failed");
-    cudaThreadSynchronize();
+    hipDeviceSynchronize();
     return target.sum();
 }
 
@@ -1004,7 +1005,7 @@ float NVMatrix::norm() {
 }
 
 void NVMatrix::print(int startRow, int rows, int startCol, int cols) const {
-    cudaThreadSynchronize();
+    hipDeviceSynchronize();
     Matrix hm = Matrix(_numRows, _numCols);
     copyToHost(hm);
     hm.print(startRow, rows, startCol, cols);

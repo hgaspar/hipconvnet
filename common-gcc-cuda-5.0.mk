@@ -98,7 +98,8 @@ CWARN_FLAGS := $(CXXWARN_FLAGS) \
 CUBIN_ARCH_FLAG :=
 CXX_ARCH_FLAGS  :=
 #HGSOS NVCCFLAGS       := --gpu-architecture compute_20 --gpu-code compute_20 -ccbin=gcc-4.6
-NVCCFLAGS       := --gpu-architecture compute_20 --gpu-code compute_20 -ccbin=gcc
+##HGSOS NVCCFLAGS       := --gpu-architecture compute_20 --gpu-code compute_20 -ccbin=gcc
+NVCCFLAGS       := --gpu-architecture=compute_20 --gpu-code=compute_20 -ccbin=gcc
 LIB_ARCH        := $(OSARCH)
 
 # Determining the necessary Cross-Compilation Flags
@@ -418,21 +419,21 @@ PTXBINS +=  $(patsubst %.cu,$(PTXDIR)/%.ptx,$(notdir $(PTXFILES)))
 # Rules
 ################################################################################
 $(OBJDIR)/%.c.o : $(SRCDIR)%.c $(C_DEPS)
-	$(VERBOSE)$(CC) $(CFLAGS) -o $@ -c $<
+	$(VERBOSE)$(HIPCC) $(CFLAGS) -o $@ -c $<
 
 $(OBJDIR)/%.cpp.o : $(SRCDIR)%.cpp $(C_DEPS)
-	$(VERBOSE)$(CXX) $(CXXFLAGS) -o $@ -c $<
+	$(VERBOSE)$(HIPCC) $(CXXFLAGS) -o $@ -c $<
 
 # Default arch includes gencode for sm_10, sm_20, and other archs from GENCODE_ARCH declared in the makefile
 $(OBJDIR)/%.cu.o : $(SRCDIR)%.cu $(CU_DEPS)
-	$(VERBOSE)$(NVCC) $(GENCODE_SM10) $(GENCODE_ARCH) $(GENCODE_SM20) $(NVCCFLAGS) $(SMVERSIONFLAGS) -o $@ -c $<
+	$(VERBOSE)$(HIPCC) $(GENCODE_SM10) $(GENCODE_ARCH) $(GENCODE_SM20) $(NVCCFLAGS) $(SMVERSIONFLAGS) -o $@ -c $<
 
 # Default arch includes gencode for sm_10, sm_20, and other archs from GENCODE_ARCH declared in the makefile
 $(CUBINDIR)/%.cubin : $(SRCDIR)%.cu cubindirectory
-	$(VERBOSE)$(NVCC) $(GENCODE_SM10) $(GENCODE_ARCH) $(GENCODE_SM20) $(CUBIN_ARCH_FLAG) $(NVCCFLAGS) $(SMVERSIONFLAGS) -o $@ -cubin $<
+	$(VERBOSE)$(HIPCC) $(GENCODE_SM10) $(GENCODE_ARCH) $(GENCODE_SM20) $(CUBIN_ARCH_FLAG) $(NVCCFLAGS) $(SMVERSIONFLAGS) -o $@ -cubin $<
 
 $(PTXDIR)/%.ptx : $(SRCDIR)%.cu ptxdirectory
-	$(VERBOSE)$(NVCC) $(CUBIN_ARCH_FLAG) $(NVCCFLAGS) $(SMVERSIONFLAGS) -o $@ -ptx $<
+	$(VERBOSE)$(HIPCC) $(CUBIN_ARCH_FLAG) $(NVCCFLAGS) $(SMVERSIONFLAGS) -o $@ -ptx $<
 
 #
 # The following definition is a template that gets instantiated for each SM
@@ -453,8 +454,8 @@ define SMVERSION_template
 #OBJS += $(patsubst %.cu,$(OBJDIR)/%.cu_$(1).o,$(notdir $(CUFILES_$(1))))
 OBJS += $(patsubst %.cu,$(OBJDIR)/%.cu_$(1).o,$(notdir $(CUFILES_sm_$(1))))
 $(OBJDIR)/%.cu_$(1).o : $(SRCDIR)%.cu $(CU_DEPS)
-#	$(VERBOSE)$(NVCC) -o $$@ -c $$< $(NVCCFLAGS)  $(1)
-	$(VERBOSE)$(NVCC) -gencode=arch=compute_$(1),code=\"sm_$(1),compute_$(1)\" $(GENCODE_SM20) -o $$@ -c $$< $(NVCCFLAGS)
+#	$(VERBOSE)$(HIPCC) -o $$@ -c $$< $(NVCCFLAGS)  $(1)
+	$(VERBOSE)$(HIPCC) -gencode=arch=compute_$(1),code=\"sm_$(1),compute_$(1)\" $(GENCODE_SM20) -o $$@ -c $$< $(NVCCFLAGS)
 endef
 
 # This line invokes the above template for each arch version stored in
@@ -495,3 +496,7 @@ clean : tidy
 clobber : clean
 	$(VERBOSE)rm -rf $(ROOTOBJDIR)
 
+
+#%.o:: %.cpp
+#	$(HIPCC) $(HIPCC_FLAGS) $< -c -o $@
+	

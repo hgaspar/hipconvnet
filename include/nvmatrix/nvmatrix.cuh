@@ -1,3 +1,4 @@
+#include "hip/hip_runtime.h"
 /* 
  * Copyright (c) 2011, Alex Krizhevsky (akrizhevsky@gmail.com)
  * All rights reserved.
@@ -50,7 +51,7 @@
 #define WARN(msg) ;
 #endif
 
-#define CUDA_CALL(x) do { if((x) != cudaSuccess) { \
+#define CUDA_CALL(x) do { if((x) != hipSuccess) { \
                             printf("Error at %s:%d\n",__FILE__,__LINE__);\
                             exit(EXIT_FAILURE);}} while(0)
 #define CURAND_CALL(x) do { if((x) != CURAND_STATUS_SUCCESS) { \
@@ -251,14 +252,14 @@ public:
                 std::min(NUM_BLOCKS_MAX, DIVUP(height, ELTWISE_THREADS_Y)));
         dim3 threads(ELTWISE_THREADS_X, ELTWISE_THREADS_Y);
         if (target.isTrans() == isTrans()) {
-            kEltwiseUnaryOp<Op><<<blocks, threads>>>(_devData, target._devData, height, width, getStride(), target.getStride(), op);
+            hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseUnaryOp<Op>), dim3(blocks), dim3(threads), 0, 0, _devData, target._devData, height, width, getStride(), target.getStride(), op);
             cutilCheckMsg("kEltwiseUnaryOp: Kernel execution failed");
         } else {
             bool checkBounds = !(width % ELTWISE_THREADS_X == 0 && height % ELTWISE_THREADS_X == 0);
             if (checkBounds) {
-                kEltwiseUnaryOpTrans<Op, true><<<blocks, threads>>>(_devData, target._devData, height, width, getStride(), target.getStride(), op);
+                hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseUnaryOpTrans<Op, true>), dim3(blocks), dim3(threads), 0, 0, _devData, target._devData, height, width, getStride(), target.getStride(), op);
             } else {
-                kEltwiseUnaryOpTrans<Op, false><<<blocks, threads>>>(_devData, target._devData, height, width, getStride(), target.getStride(), op);
+                hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseUnaryOpTrans<Op, false>), dim3(blocks), dim3(threads), 0, 0, _devData, target._devData, height, width, getStride(), target.getStride(), op);
             }
             cutilCheckMsg("kEltwiseUnaryOpTrans: Kernel execution failed");
         }
@@ -284,7 +285,7 @@ public:
                     std::min(NUM_BLOCKS_MAX, DIVUP(height, ELTWISE_THREADS_Y)));
         dim3 threads(ELTWISE_THREADS_X, ELTWISE_THREADS_Y);
         if (target.isTrans() == isTrans() && target.isTrans() == b.isTrans()) {
-            kEltwiseBinaryOp<Op><<<blocks, threads>>>(_devData, b._devData, target._devData, height, width, getStride(),
+            hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseBinaryOp<Op>), dim3(blocks), dim3(threads), 0, 0, _devData, b._devData, target._devData, height, width, getStride(),
                                                       b.getStride(), target.getStride(), op);
             cutilCheckMsg("kEltwiseBinaryOp: Kernel execution failed");
         } else {
@@ -292,26 +293,26 @@ public:
             bool checkBounds = !(width % ELTWISE_THREADS_X == 0 && height % ELTWISE_THREADS_X == 0);
             if (target.isTrans() == isTrans() && target.isTrans() != b.isTrans()) {
                 if (checkBounds) {
-                    kEltwiseBinaryOpTrans<Op,true,false,false><<<blocks, threads>>>(_devData, b._devData, target._devData, height, width,getStride(),
+                    hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseBinaryOpTrans<Op,true,false,false>), dim3(blocks), dim3(threads), 0, 0, _devData, b._devData, target._devData, height, width,getStride(),
                                                                b.getStride(), target.getStride(), op);
                 } else {
-                    kEltwiseBinaryOpTrans<Op,false,false,false><<<blocks, threads>>>(_devData, b._devData, target._devData, height, width,getStride(),
+                    hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseBinaryOpTrans<Op,false,false,false>), dim3(blocks), dim3(threads), 0, 0, _devData, b._devData, target._devData, height, width,getStride(),
                                                                b.getStride(), target.getStride(), op);
                 }
             } else if (target.isTrans() != isTrans() && target.isTrans() != b.isTrans()) {
                 if (checkBounds) {
-                    kEltwiseBinaryOpTrans<Op,true,true,false><<<blocks, threads>>>(_devData, b._devData, target._devData, height, width,getStride(),
+                    hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseBinaryOpTrans<Op,true,true,false>), dim3(blocks), dim3(threads), 0, 0, _devData, b._devData, target._devData, height, width,getStride(),
                                                                b.getStride(), target.getStride(), op);
                 } else {
-                    kEltwiseBinaryOpTrans<Op,false,true,false><<<blocks, threads>>>(_devData, b._devData, target._devData, height, width,getStride(),
+                    hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseBinaryOpTrans<Op,false,true,false>), dim3(blocks), dim3(threads), 0, 0, _devData, b._devData, target._devData, height, width,getStride(),
                                                                b.getStride(), target.getStride(), op);
                 }
             } else if (target.isTrans() != isTrans() && target.isTrans() == b.isTrans()) {
                 if (checkBounds) {
-                    kEltwiseBinaryOpTrans<Op,true,false,true><<<blocks, threads>>>(b._devData, _devData, target._devData, height, width,b.getStride(),
+                    hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseBinaryOpTrans<Op,true,false,true>), dim3(blocks), dim3(threads), 0, 0, b._devData, _devData, target._devData, height, width,b.getStride(),
                                                                getStride(), target.getStride(), op);
                 } else {
-                    kEltwiseBinaryOpTrans<Op,false,false,true><<<blocks, threads>>>(b._devData, _devData, target._devData, height, width, b.getStride(),
+                    hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseBinaryOpTrans<Op,false,false,true>), dim3(blocks), dim3(threads), 0, 0, b._devData, _devData, target._devData, height, width, b.getStride(),
                                                                getStride(), target.getStride(), op);
                 }
             }
@@ -333,7 +334,7 @@ public:
         dim3 blocks(std::min(NUM_BLOCKS_MAX, DIVUP(width, ELTWISE_THREADS_X)),
                     std::min(NUM_BLOCKS_MAX, DIVUP(height, ELTWISE_THREADS_Y)));
         dim3 threads(ELTWISE_THREADS_X, ELTWISE_THREADS_Y);
-        kEltwiseTernaryOp<Op><<<blocks, threads>>>(_devData, b._devData, c._devData, target._devData, height, width,
+        hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseTernaryOp<Op>), dim3(blocks), dim3(threads), 0, 0, _devData, b._devData, c._devData, target._devData, height, width,
                                                    getStride(), b.getStride(), c.getStride(), target.getStride(), op);
         cutilCheckMsg("kEltwiseTernaryOp: Kernel execution failed");
     }
@@ -442,12 +443,12 @@ public:
         dim3 threads(ADD_VEC_THREADS_X, ADD_VEC_THREADS_Y);
         dim3 blocks(MIN(NUM_BLOCKS_MAX, DIVUP(width, ADD_VEC_THREADS_X)), MIN(NUM_BLOCKS_MAX, DIVUP(height, ADD_VEC_THREADS_Y)));
         if (vec.getNumRows() == _numRows && !isTrans() || vec.getNumCols() == _numCols && isTrans()) {
-            kColVectorOp<Op><<<blocks,threads>>>(_devData, vec._devData, target._devData, width, height, getStride(), target.getStride(), op);
+            hipLaunchKernel(HIP_KERNEL_NAME(kColVectorOp<Op>), dim3(blocks), dim3(threads), 0, 0, _devData, vec._devData, target._devData, width, height, getStride(), target.getStride(), op);
         } else {
-            kRowVectorOp<Op><<<blocks,threads>>>(_devData, vec._devData, target._devData, width, height, getStride(), target.getStride(), op);
+            hipLaunchKernel(HIP_KERNEL_NAME(kRowVectorOp<Op>), dim3(blocks), dim3(threads), 0, 0, _devData, vec._devData, target._devData, width, height, getStride(), target.getStride(), op);
         }
         cutilCheckMsg("Kernel execution failed");
-    //    cudaThreadSynchronize();
+    //    hipDeviceSynchronize();
     }
 
     template<class UnaryOperator> float argMax(UnaryOperator u) {

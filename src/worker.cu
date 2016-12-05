@@ -97,7 +97,7 @@ void TrainingWorker::run() {
             _convNet->updateWeights();
         }
     }
-    cudaThreadSynchronize();
+    hipDeviceSynchronize();
     _convNet->getResultQueue().enqueue(new WorkResult(WorkResult::BATCH_DONE, batchCost));
 }
 
@@ -168,7 +168,7 @@ void MultiviewTestWorker::run() {
         
         _convNet->getCost(batchCost);
     }
-    cudaThreadSynchronize();
+    hipDeviceSynchronize();
 
     _convNet->getResultQueue().enqueue(new WorkResult(WorkResult::BATCH_DONE, batchCost));
 }
@@ -209,6 +209,6 @@ void FeatureWorker::run() {
         acts_T.copyToHost(miniFtrs);
         delete &miniFtrs;
     }
-    cudaThreadSynchronize();
+    hipDeviceSynchronize();
     _convNet->getResultQueue().enqueue(new WorkResult(WorkResult::BATCH_DONE, batchCost));
 }

@@ -1,3 +1,44 @@
+
+
+HIP_PATH=/opt/rocm/hip
+HIPCC=$(HIP_PATH)/bin/hipcc
+HIPLD=$(HIP_PATH)/bin/hipcc
+#export HSA_PATH = /opt/rocm/hsa
+
+#enable profiling
+#HIPCC_FLAGS += -DPROFILING
+
+GCC_VER ?= 4.8
+
+GCC_CUR_VER = $(shell gcc -dumpversion)
+GPP_CUR_VER = $(shell g++ -dumpversion)
+
+GCC_CUR = 0
+GPP_CUR = 1
+
+ifeq ($(findstring $(GCC_VER),$(GCC_CUR_VER)),$(GCC_VER))
+GCC_CUR = GCC_VER
+endif
+
+ifeq ($(findstring $(GCC_VER),$(GPP_CUR_VER)),$(GCC_VER))
+GPP_CUR = GCC_VER
+endif
+
+ifeq ($(GCC_CUR), $(GPP_CUR))
+    HIPCC_FLAGS += -I /usr/include/x86_64-linux-gnu -I /usr/include/x86_64-linux-gnu/c++/$(GCC_VER) -I /usr/include/c++/$(GCC_VER)
+else
+    $(warning )
+    $(warning ***************************************************)
+    $(warning *** The supported version of gcc and g++ is $(GCC_VER) ***)
+    $(warning ***    Current default version of gcc is $(GCC_CUR_VER)    ***)
+    $(warning ***    Current default version of g++ is $(GPP_CUR_VER)    ***)
+    $(warning ***************************************************)
+    $(warning )
+endif
+#### GCC system includes workaround ####
+
+
+
 MODELNAME := _ConvNet
 
 INCLUDES :=  -I$(PYTHON_INCLUDE_PATH) -I$(NUMPY_INCLUDE_PATH) -I./include -I./include/common -I./include/cudaconv2 -I./include/nvmatrix
@@ -8,7 +49,8 @@ USECUBLAS   := 1
 PYTHON_VERSION=$(shell python -V 2>&1 | cut -d ' ' -f 2 | cut -d '.' -f 1,2)
 LIB += -lpython$(PYTHON_VERSION)
 
-GENCODE_ARCH := -gencode=arch=compute_20,code=\"sm_20,compute_20\"
+#HGSOS GENCODE_ARCH := -gencode=arch=compute_20,code=\"sm_20,compute_20\"
+#GENCODE_ARCH := -gencode=compute_20, arch=compute_20, code=\"sm_20,compute_20\"
 COMMONFLAGS := -DNUMPY_INTERFACE -DMODELNAME=$(MODELNAME) -DINITNAME=init$(MODELNAME)
 
 EXECUTABLE	:= $(MODELNAME).so

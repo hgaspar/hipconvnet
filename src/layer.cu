@@ -422,10 +422,10 @@ void LocalLayer::copyToGPU() {
     WeightLayer::copyToGPU();
     for  (int i = 0; i < _prev.size(); i++) {
         if (_randSparse->at(i)) { // Copy to GPU vector that describes sparse random connectivity
-            cudaMalloc(&_filterConns->at(i).dFilterConns, sizeof(int) * _groups->at(i) * _filterChannels->at(i));
-            cudaMemcpy(_filterConns->at(i).dFilterConns, _filterConns->at(i).hFilterConns,
-                       sizeof(int) * _groups->at(i) * _filterChannels->at(i), cudaMemcpyHostToDevice);
-            cutilCheckMsg("cudaMemcpy: failed");
+            hipMalloc(&_filterConns->at(i).dFilterConns, sizeof(int) * _groups->at(i) * _filterChannels->at(i));
+            hipMemcpy(_filterConns->at(i).dFilterConns, _filterConns->at(i).hFilterConns,
+                       sizeof(int) * _groups->at(i) * _filterChannels->at(i), hipMemcpyHostToDevice);
+            cutilCheckMsg("hipMemcpy: failed");
         }
     }
 }

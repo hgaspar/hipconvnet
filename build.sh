@@ -13,6 +13,8 @@
 # 
 # (it'll almost certainly be under /usr)
 
+
+
 # CUDA toolkit installation directory.
 export CUDA_INSTALL_PATH=/usr/local/cuda
 
