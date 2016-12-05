@@ -64,9 +64,9 @@ NVCC       := $(CUDA_INSTALL_PATH)/bin/nvcc
 #HGSOS CC         := gcc-4.6 -fPIC
 #HGSOS LINK       := g++-4.6 -fPIC
 
-CXX        := g++ -fPIC
-CC         := gcc -fPIC
-LINK       := g++ -fPIC
+CXX        := $(HIPCC) -fPIC
+CC         := $(HIPCC) -fPIC
+LINK       := $(HIPCC) -fPIC
 
 # Includes
 INCLUDES  += -I. -I$(CUDA_INSTALL_PATH)/include -I$(COMMONDIR)/inc -I$(SHAREDDIR)/inc
