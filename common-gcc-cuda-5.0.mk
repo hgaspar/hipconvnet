@@ -72,27 +72,28 @@ LINK       := $(HIPCC) -fPIC
 INCLUDES  += -I. -I$(CUDA_INSTALL_PATH)/include -I$(COMMONDIR)/inc -I$(SHAREDDIR)/inc
 
 # Warning flags
-CXXWARN_FLAGS := \
-	-W -Wall \
-	-Wimplicit \
-	-Wswitch \
-	-Wformat \
-	-Wchar-subscripts \
-	-Wparentheses \
-	-Wmultichar \
-	-Wtrigraphs \
-	-Wpointer-arith \
-	-Wcast-align \
-	-Wreturn-type \
-	-Wno-unused-function \
-	$(SPACE)
+#HGSOS
+#CXXWARN_FLAGS := \
+#	-W -Wall \
+#	-Wimplicit \
+#	-Wswitch \
+#	-Wformat \
+#	-Wchar-subscripts \
+#	-Wparentheses \
+#	-Wmultichar \
+#	-Wtrigraphs \
+#	-Wpointer-arith \
+#	-Wcast-align \
+#	-Wreturn-type \
+#	-Wno-unused-function \
+#	$(SPACE)
 
-CWARN_FLAGS := $(CXXWARN_FLAGS) \
-	-Wstrict-prototypes \
-	-Wmissing-prototypes \
-	-Wmissing-declarations \
-	-Wnested-externs \
-	-Wmain \
+#CWARN_FLAGS := $(CXXWARN_FLAGS) \
+#	-Wstrict-prototypes \
+#	-Wmissing-prototypes \
+#	-Wmissing-declarations \
+#	-Wnested-externs \
+#	-Wmain \
 
 # architecture flag for nvcc and gcc compilers build
 CUBIN_ARCH_FLAG :=
