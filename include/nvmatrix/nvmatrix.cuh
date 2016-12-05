@@ -41,6 +41,8 @@
 #include <time.h>
 #include <curand_kernel.h>
 
+#include <hip_runtime.h>
+
 #include <matrix.h>
 #include "nvmatrix_kernels.cuh"
 #include "nvmatrix_operators.cuh"
