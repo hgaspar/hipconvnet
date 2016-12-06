@@ -967,14 +967,12 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
 						#ifdef ENABLE_CACHE_CONFIG
-                            #ifdef ENABLE_CACHE_CONFIG 
 							hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, false, true, true>, hipFuncCachePreferShared);
 							#endif
 							
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-						#ifdef ENABLE_CACHE_CONFIG
                             #ifdef ENABLE_CACHE_CONFIG 
 							hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, false, true, true>, hipFuncCachePreferShared);
 							#endif
