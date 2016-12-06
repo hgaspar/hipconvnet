@@ -136,7 +136,9 @@ Layer* ConvNet::initLayer(string& layerType, PyObject* paramsDict) {
  */
 void ConvNet::initCuda() { 
     hipSetDevice(_deviceID < 0 ? cutGetMaxGflopsDeviceId() : _deviceID);
-//HGSOS    hipDeviceSetCacheConfig(hipFuncCachePreferShared);
+#ifdef ENABLE_CACHE_CONFIG
+    hipDeviceSetCacheConfig(hipFuncCachePreferShared);
+#endif
     cublasInit();
     NVMatrix::initRandom(time(0));
     copyToGPU();

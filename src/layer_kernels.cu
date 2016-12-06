@@ -175,11 +175,15 @@ void computeEltwiseMaxGrad(NVMatrix& actGrad, NVMatrix& input, NVMatrix& output,
     dim3 threads(128);
     if (add) {
         assert(actGrad.isSameDims(target));
+#ifdef ENABLE_CACHE_CONFIG
         hipFuncSetCacheConfig(kEltwiseMaxGrad<128, true>, hipFuncCachePreferL1);
+#endif
         hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseMaxGrad<128, true>), dim3(blocks), dim3(threads), 0, 0, actGrad.getDevData(), input.getDevData(), output.getDevData(), target.getDevData(), actGrad.getNumElements());
     } else {
         target.resize(actGrad);
+#ifdef ENABLE_CACHE_CONFIG
         hipFuncSetCacheConfig(kEltwiseMaxGrad<128, false>, hipFuncCachePreferL1);
+#endif
         hipLaunchKernel(HIP_KERNEL_NAME(kEltwiseMaxGrad<128, false>), dim3(blocks), dim3(threads), 0, 0, actGrad.getDevData(), input.getDevData(), output.getDevData(), target.getDevData(), actGrad.getNumElements());
     }
     

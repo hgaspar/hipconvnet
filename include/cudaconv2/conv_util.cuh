@@ -354,41 +354,57 @@ void convLocalPool(NVMatrix& images, NVMatrix& target, int numFilters,
         if (imgsPerThread == 8) {
             if (filtersPerThread == 1) {
                  if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 8, 1, true>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 8, 1, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 8, 1, false>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 8, 1, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 }
             } else if (filtersPerThread == 2) {
                 if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 8, 2, true>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 8, 2, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 8, 2, false>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 8, 2, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 }
             } else if (filtersPerThread == 3) {
                 if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 8, 3, true>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 8, 3, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 8, 3, false>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 8, 3, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 }
             } else if (filtersPerThread == 4) {
                 if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 8, 4, true>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 8, 4, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 8, 4, false>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 8, 4, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 }
@@ -396,41 +412,57 @@ void convLocalPool(NVMatrix& images, NVMatrix& target, int numFilters,
         } else if (imgsPerThread == 4) {
             if (filtersPerThread == 1) {
                  if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 4, 1, true>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 4, 1, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 4, 1, false>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 4, 1, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 }
             } else if (filtersPerThread == 2) {
                 if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 4, 2, true>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 4, 2, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 4, 2, false>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 4, 2, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 }
             } else if (filtersPerThread == 3) {
                 if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 4, 3, true>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 4, 3, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 4, 3, false>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 4, 3, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 }
             } else if (filtersPerThread == 4) {
                 if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 4, 4, true>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 4, 4, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool2<Pooler, 8, 4, 4, false>, hipFuncCachePreferShared);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool2<Pooler, 8, 4, 4, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, outputsX, pooler);
                 }
@@ -446,21 +478,29 @@ void convLocalPool(NVMatrix& images, NVMatrix& target, int numFilters,
         if (imgsPerThread == 4) {
             if (filtersPerThread == 1) {
                 if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool<Pooler, 4, 32, 4, 1, true>, hipFuncCachePreferL1);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool<Pooler, 4, 32, 4, 1, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, strideX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool<Pooler, 4, 32, 4, 1, false>, hipFuncCachePreferL1);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool<Pooler, 4, 32, 4, 1, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, strideX, outputsX, pooler);
                 }
             } else {
                 if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool<Pooler, 4, 32, 4, 2, true>, hipFuncCachePreferL1);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool<Pooler, 4, 32, 4, 2, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, strideX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool<Pooler, 4, 32, 4, 2, false>, hipFuncCachePreferL1);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool<Pooler, 4, 32, 4, 2, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, strideX, outputsX, pooler);
                 }
@@ -468,21 +508,29 @@ void convLocalPool(NVMatrix& images, NVMatrix& target, int numFilters,
         } else if (imgsPerThread == 2) {
             if (filtersPerThread == 1) {
                 if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool<Pooler, 4, 32, 2, 1, true>, hipFuncCachePreferL1);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool<Pooler, 4, 32, 2, 1, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, strideX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool<Pooler, 4, 32, 2, 1, false>, hipFuncCachePreferL1);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool<Pooler, 4, 32, 2, 1, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, strideX, outputsX, pooler);
                 }
             } else {
                 if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool<Pooler, 4, 32, 2, 2, true>, hipFuncCachePreferL1);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool<Pooler, 4, 32, 2, 2, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, strideX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool<Pooler, 4, 32, 2, 2, false>, hipFuncCachePreferL1);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool<Pooler, 4, 32, 2, 2, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, strideX, outputsX, pooler);
                 }
@@ -490,21 +538,29 @@ void convLocalPool(NVMatrix& images, NVMatrix& target, int numFilters,
         } else {
             if (filtersPerThread == 1) {
                 if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool<Pooler, 4, 32, 1, 1, true>, hipFuncCachePreferL1);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool<Pooler, 4, 32, 1, 1, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, strideX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool<Pooler, 4, 32, 1, 1, false>, hipFuncCachePreferL1);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool<Pooler, 4, 32, 1, 1, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, strideX, outputsX, pooler);
                 }
             } else {
                 if (checkCaseBounds) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool<Pooler, 4, 32, 1, 2, true>, hipFuncCachePreferL1);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool<Pooler, 4, 32, 1, 2, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, strideX, outputsX, pooler);
                 } else {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kLocalPool<Pooler, 4, 32, 1, 2, false>, hipFuncCachePreferL1);
+#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kLocalPool<Pooler, 4, 32, 1, 2, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(),
                                                                       imgSize, numFilters, numImages, subsX, startX, strideX, outputsX, pooler);
                 }
