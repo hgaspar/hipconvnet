@@ -34,7 +34,7 @@
 #endif
 
 #include <map>
-#include <cublas.h>
+#include <hipblas.h>
 #include <cuda.h>
 #include <curand.h>
 #include <cutil_inline.h>
@@ -73,7 +73,7 @@ private:
 
     static void checkCublasError(const char* msg) {
         cublasStatus status = cublasGetError();
-        if (status != CUBLAS_STATUS_SUCCESS) {
+        if (status != HIPBLAS_STATUS_SUCCESS) {
             fprintf(stderr, msg, NULL);
             exit(EXIT_FAILURE);
         }

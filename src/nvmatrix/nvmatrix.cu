@@ -28,7 +28,7 @@
 #include <set>
 #include <vector>
 #include <assert.h>
-#include <cublas.h>
+#include <hipblas.h>
 #include <cutil_inline.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -125,7 +125,7 @@ NVMatrix::NVMatrix(float* devData, int numRows, int numCols, int stride, bool is
 NVMatrix::~NVMatrix() {
     if(_ownsData && _numElements > 0) {
         cublasStatus status = cublasFree(_devData);
-        if (status != CUBLAS_STATUS_SUCCESS) {
+        if (status != HIPBLAS_STATUS_SUCCESS) {
             fprintf(stderr, "!!!! memory free error\n");
             exit(EXIT_FAILURE);
         }
@@ -145,9 +145,9 @@ void NVMatrix::copyFromHost(const Matrix& hostMatrix) {
     setTrans(hostMatrix.isTrans());
 
     if (getNumElements() > 0) {
-        cublasStatus status = cublasSetMatrix(hostMatrix.getLeadingDim(), hostMatrix.getFollowingDim(), sizeof(float),
+        cublasStatus status = hipblasSetMatrix(hostMatrix.getLeadingDim(), hostMatrix.getFollowingDim(), sizeof(float),
                                               hostMatrix.getData(), hostMatrix.getLeadingDim(), _devData, _stride);
-        if (status != CUBLAS_STATUS_SUCCESS) {
+        if (status != HIPBLAS_STATUS_SUCCESS) {
             fprintf(stderr, "!!!! device access error (write)\n");
             exit( EXIT_FAILURE);
         }
@@ -160,9 +160,9 @@ void NVMatrix::copyToHost(Matrix& hostMatrix) const {
     hostMatrix.setTrans(_isTrans);
     if (getNumElements() > 0) {
     //    printf("rows: %d, cols: %d, stride: %d\n", getNumRows(), getNumCols(), getStride());
-        cublasStatus status = cublasGetMatrix(getLeadingDim(),getFollowingDim(), sizeof(float),
+        cublasStatus status = hipblasGetMatrix(getLeadingDim(),getFollowingDim(), sizeof(float),
                                              _devData, getStride(), hostMatrix.getData(), hostMatrix.getLeadingDim());
-        if (status != CUBLAS_STATUS_SUCCESS) {
+        if (status != HIPBLAS_STATUS_SUCCESS) {
             fprintf(stderr, "!!!! device access error (read)\n");
             exit( EXIT_FAILURE);
         }
@@ -198,12 +198,12 @@ void NVMatrix::rightMult(const NVMatrix &b, float scaleAB, NVMatrix &target) con
     assert(target.getNumRows() == _numRows);
     assert(target.getNumCols() == b.getNumCols());
     if(_numRows % 64 != 0 || _numCols % 64 != 0 || b.getNumCols() % 64 != 0) {
-        WARN("Matrix dimensions not divisible by 64 -- cublasSgemm performance may suffer.");
+        WARN("Matrix dimensions not divisible by 64 -- hipblasSgemm performance may suffer.");
     }
-    cublasSgemm(getTransChar(), b.getTransChar(), _numRows, b.getNumCols(), _numCols,
+    hipblasSgemm(getTransChar(), b.getTransChar(), _numRows, b.getNumCols(), _numCols,
                 scaleAB, _devData, getLeadingDim(), b.getDevData(), b.getLeadingDim(),
                 0, target.getDevData(), getNumRows());
-    checkCublasError("cublasSgemm failed");
+    checkCublasError("hipblasSgemm failed");
 //    hipDeviceSynchronize();
 }
 
@@ -230,12 +230,12 @@ void NVMatrix::addProduct(const NVMatrix& a, const NVMatrix &b, float scaleThis,
     assert(this->getNumCols() == b.getNumCols());
     assert(_isTrans);
     if(a.getNumRows() % 64 != 0 || a.getNumCols() % 64 != 0 || b.getNumCols() % 64 != 0) {
-        WARN("Matrix dimensions not divisible by 64 -- cublasSgemm performance may suffer.");
+        WARN("Matrix dimensions not divisible by 64 -- hipblasSgemm performance may suffer.");
     }
-    cublasSgemm(a.getTransChar(), b.getTransChar(), a.getNumRows(), b.getNumCols(), a.getNumCols(),
+    hipblasSgemm(a.getTransChar(), b.getTransChar(), a.getNumRows(), b.getNumCols(), a.getNumCols(),
                 scaleAB, a.getDevData(), a.getLeadingDim(), b.getDevData(), b.getLeadingDim(),
                 scaleThis, _devData, getLeadingDim());
-    checkCublasError("cublasSgemm failed");
+    checkCublasError("hipblasSgemm failed");
 //    hipDeviceSynchronize();
 }
 
@@ -467,14 +467,14 @@ bool NVMatrix::resize(int numRows, int numCols) {
         if (_numElements != numRows * numCols) {
             if (_numElements > 0) { // free old memory
                 cublasStatus status = cublasFree(_devData);
-                if (status != CUBLAS_STATUS_SUCCESS) {
+                if (status != HIPBLAS_STATUS_SUCCESS) {
                     fprintf(stderr, "!!!! memory free error: %X\n", status);
                     exit(EXIT_FAILURE);
                 }
             }
             if (numRows * numCols > 0) { // allocate new memory
                 cublasStatus status = cublasAlloc(numCols * numRows, sizeof(float), (void**) &_devData);
-                if (status != CUBLAS_STATUS_SUCCESS) {
+                if (status != HIPBLAS_STATUS_SUCCESS) {
                     fprintf(stderr, "!!!! device memory allocation error\n");
                     exit(EXIT_FAILURE);
                 }

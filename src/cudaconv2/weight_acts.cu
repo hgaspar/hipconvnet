@@ -1,3 +1,4 @@
+#include "hip_runtime.h"
 #include "hip/hip_runtime.h"
 /* 
  * Copyright (c) 2011, Alex Krizhevsky (akrizhevsky@gmail.com)

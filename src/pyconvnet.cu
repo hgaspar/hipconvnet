@@ -28,7 +28,7 @@
 #include <arrayobject.h>
 #include <assert.h>
 #include <cutil_inline.h>
-#include <cublas.h>
+#include <hipblas.h>
 #include <time.h>
 #include <vector>
 
