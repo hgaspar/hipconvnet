@@ -216,7 +216,9 @@ void computeLogregCost(NVMatrix& labels, NVMatrix& probs, NVMatrix& labelLogProb
     correctProbs_out.resize(1, numCases);
     dim3 threads(LOGREG_ERR_THREADS_X, 1);
     dim3 blocks(DIVUP(numCases, LOGREG_ERR_THREADS_X), 1);
+#ifdef ENABLE_CACHE_CONFIG
     hipFuncSetCacheConfig(kLogregCost, hipFuncCachePreferL1);
+#endif
     hipLaunchKernel(HIP_KERNEL_NAME(kLogregCost), dim3(blocks), dim3(threads), 0, 0, probs.getDevData(), labels.getDevData(), maxProbs.getDevData(),
                                      labelLogProbs_out.getDevData(), correctProbs_out.getDevData(),
                                      numCases, numOut);
