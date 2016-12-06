@@ -45,7 +45,7 @@ using namespace std;
 /*
  * Device random number generator pointers.
  */
-//map<int,curandGenerator_t> NVMatrix::rndGen;
+//map<int,hiprngGenerator_t> NVMatrix::rndGen;
 map<int,curandState*> NVMatrix::rndDevStates;
 pthread_mutex_t* NVMatrix::_rndMutex = makeMutex();
 
@@ -327,7 +327,7 @@ void NVMatrix::binarizeProbs(NVMatrix& target) {
 void NVMatrix::randomizeUniform() {
     assert(isContiguous());
     assert(isRndInitialized());
-//    CURAND_CALL(curandGenerateUniform(rndGen, _devData, getNumElements()));
+//    CURAND_CALL(hiprngGenerateUniform(rndGen, _devData, getNumElements()));
     _unaryRandomize(*this, UniformUnaryRandomizer());
 }
 
@@ -342,7 +342,7 @@ void NVMatrix::randomizeGaussian(float stdev) {
 void NVMatrix::randomizeGaussian(float mean, float stdev) {
     assert(isContiguous());
     assert(isRndInitialized());
-//    CURAND_CALL(curandGenerateNormal(rndGen, _devData, getNumElements(), mean, stdev));
+//    CURAND_CALL(hiprngGenerateNormal(rndGen, _devData, getNumElements(), mean, stdev));
     _unaryRandomize(*this, GaussianUnaryRandomizer(mean, stdev));
 }
 

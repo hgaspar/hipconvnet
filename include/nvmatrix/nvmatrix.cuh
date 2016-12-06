@@ -36,7 +36,7 @@
 #include <map>
 #include <hipblas.h>
 #include <cuda.h>
-#include <curand.h>
+#include <hiprng.h>
 #include <cutil_inline.h>
 #include <time.h>
 #include <curand_kernel.h>
@@ -54,7 +54,7 @@
 #define CUDA_CALL(x) do { if((x) != hipSuccess) { \
                             printf("Error at %s:%d\n",__FILE__,__LINE__);\
                             exit(EXIT_FAILURE);}} while(0)
-#define CURAND_CALL(x) do { if((x) != CURAND_STATUS_SUCCESS) { \
+#define CURAND_CALL(x) do { if((x) != HIPRNG_STATUS_SUCCESS) { \
                             printf("Error at %s:%d\n",__FILE__,__LINE__);\
                             exit(EXIT_FAILURE);}} while(0)
 
@@ -67,7 +67,7 @@ private:
     bool _isTrans;
     bool _ownsData;
 
-//    static std::map<int,curandGenerator_t> rndGen;
+//    static std::map<int,hiprngGenerator_t> rndGen;
     static std::map<int,curandState*> rndDevStates;
     static pthread_mutex_t *_rndMutex;
 
