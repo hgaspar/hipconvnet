@@ -7,7 +7,8 @@ HIPLD=$(HIP_PATH)/bin/hipcc
 
 HC_BLAS=/opt/rocm/hcblas
 HIP_BLAS_INCLUDE=$(HC_BLAS)/include
-
+HC_RNG=/opt/rocm/hcrng
+HIP_RNG_INCLUDE=$(HC_RNG)/include
 
 #export HSA_PATH = /opt/rocm/hsa
 

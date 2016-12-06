@@ -80,7 +80,7 @@ $(warning )
 
 # Includes
 
-INCLUDES  += -I. -I$(HIP_BLAS_INCLUDE)
+INCLUDES  += -I. -I$(HIP_BLAS_INCLUDE) -I$(HIP_RNG_INCLUDE)
 
 ifeq ($(HIP_PLATFORM), nvcc)
 INCLUDES  += -I$(CUDA_INSTALL_PATH)/include -I$(COMMONDIR)/inc -I$(SHAREDDIR)/inc
