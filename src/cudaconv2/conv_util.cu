@@ -2349,24 +2349,32 @@ void convResponseNormUndo(NVMatrix& outGrads, NVMatrix& denoms, NVMatrix& inputs
         if (imgsPerThread == 8) {
             if (checkCaseBounds) {
                 if (scaleTargets == 0 && scaleOutput == 1) {
+#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo2<16, 8, 4, true, true>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo2<16, 8, 4, true, true>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                                   target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                                   scaleTargets, scaleOutput);
                 } else {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo2<16, 8, 4, false, true>, hipFuncCachePreferL1);
+				#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo2<16, 8, 4, false, true>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                                   target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                                   scaleTargets, scaleOutput);
                 }
             } else {
                 if (scaleTargets == 0 && scaleOutput == 1) {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo2<16, 8, 4, true, false>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo2<16, 8, 4, true, false>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                                   target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                                   scaleTargets, scaleOutput);
                 } else {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo2<16, 8, 4, false, false>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo2<16, 8, 4, false, false>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                                   target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                                   scaleTargets, scaleOutput);
@@ -2375,24 +2383,32 @@ void convResponseNormUndo(NVMatrix& outGrads, NVMatrix& denoms, NVMatrix& inputs
         } else if (imgsPerThread == 4) {
             if (checkCaseBounds) {
                 if (scaleTargets == 0 && scaleOutput == 1) {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo2<16, 4, 4, true, true>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo2<16, 4, 4, true, true>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                                   target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                                   scaleTargets, scaleOutput);
                 } else {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo2<16, 4, 4, false, true>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo2<16, 4, 4, false, true>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                                   target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                                   scaleTargets, scaleOutput);
                 }
             } else {
                 if (scaleTargets == 0 && scaleOutput == 1) {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo2<16, 4, 4, true, false>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo2<16, 4, 4, true, false>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                                   target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                                   scaleTargets, scaleOutput);
                 } else {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo2<16, 4, 4, false, false>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo2<16, 4, 4, false, false>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                                   target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                                   scaleTargets, scaleOutput);
@@ -2401,24 +2417,32 @@ void convResponseNormUndo(NVMatrix& outGrads, NVMatrix& denoms, NVMatrix& inputs
         } else {
             if (checkCaseBounds) {
                 if (scaleTargets == 0 && scaleOutput == 1) {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo2<16, 2, 4, true, true>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo2<16, 2, 4, true, true>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                                   target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                                   scaleTargets, scaleOutput);
                 } else {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo2<16, 2, 4, false, true>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo2<16, 2, 4, false, true>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                                   target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                                   scaleTargets, scaleOutput);
                 }
             } else {
                 if (scaleTargets == 0 && scaleOutput == 1) {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo2<16, 2, 4, true, false>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo2<16, 2, 4, true, false>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                                   target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                                   scaleTargets, scaleOutput);
                 } else {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo2<16, 2, 4, false, false>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo2<16, 2, 4, false, false>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                                   target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                                   scaleTargets, scaleOutput);
@@ -2434,24 +2458,32 @@ void convResponseNormUndo(NVMatrix& outGrads, NVMatrix& denoms, NVMatrix& inputs
         if (imgsPerThread == 2) {
             if (checkCaseBounds) { 
                 if (scaleTargets == 0 && scaleOutput == 1) {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo<4, 32, 2, 2, false, true>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo<4, 32, 2, 2, false, true>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                               target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                               scaleTargets, scaleOutput);
                 } else {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo<4, 32, 2, 2, true, true>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo<4, 32, 2, 2, true, true>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                               target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                               scaleTargets, scaleOutput);
                 }
             } else {
                 if (scaleTargets == 0 && scaleOutput == 1) {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo<4, 32, 2, 2, false, false>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo<4, 32, 2, 2, false, false>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                               target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                               scaleTargets, scaleOutput);
                 } else {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo<4, 32, 2, 2, true, false>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo<4, 32, 2, 2, true, false>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                               target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                               scaleTargets, scaleOutput);
@@ -2460,24 +2492,32 @@ void convResponseNormUndo(NVMatrix& outGrads, NVMatrix& denoms, NVMatrix& inputs
         } else {
             if (checkCaseBounds) { 
                 if (scaleTargets == 0 && scaleOutput == 1) {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo<4, 32, 1, 2, false, true>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo<4, 32, 1, 2, false, true>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                               target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                               scaleTargets, scaleOutput);
                 } else {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo<4, 32, 1, 2, true, true>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo<4, 32, 1, 2, true, true>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                               target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                               scaleTargets, scaleOutput);
                 }
             } else {
                 if (scaleTargets == 0 && scaleOutput == 1) {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo<4, 32, 1, 2, false, false>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo<4, 32, 1, 2, false, false>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                               target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                               scaleTargets, scaleOutput);
                 } else {
+				#ifdef ENABLE_CACHE_CONFIG
                     hipFuncSetCacheConfig(kRNormUndo<4, 32, 1, 2, true, false>, hipFuncCachePreferL1);
+					#endif
                     hipLaunchKernel(HIP_KERNEL_NAME(kRNormUndo<4, 32, 1, 2, true, false>), dim3(blocks), dim3(threads), 0, 0, outGrads.getDevData(), denoms.getDevData(), inputs.getDevData(), acts.getDevData(),
                                                                               target.getDevData(), imgSize, numFilters, numImages, sizeX, powScale,
                                                                               scaleTargets, scaleOutput);
@@ -2518,26 +2558,38 @@ void convResizeBilinear(NVMatrix& images, NVMatrix& target, int imgSize, int tgt
     dim3 blocks(DIVUP(numImages, imgsPerThread * 32), numChannels * numChunks);
     if (imgsPerThread == 4) {
         if (checkCaseBounds) {
+		#ifdef ENABLE_CACHE_CONFIG
             hipFuncSetCacheConfig(kResizeBilinear<4, true>, hipFuncCachePreferL1);
+			#endif
             hipLaunchKernel(HIP_KERNEL_NAME(kResizeBilinear<4, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgSize, tgtSize, numImages, images.getStride(), scale, centerScale);
         } else {
+		#ifdef ENABLE_CACHE_CONFIG
             hipFuncSetCacheConfig(kResizeBilinear<4, false>, hipFuncCachePreferL1);
+			#endif
             hipLaunchKernel(HIP_KERNEL_NAME(kResizeBilinear<4, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgSize, tgtSize, numImages, images.getStride(), scale, centerScale);
         }
     } else if (imgsPerThread == 2) {
         if (checkCaseBounds) {
+		#ifdef ENABLE_CACHE_CONFIG
             hipFuncSetCacheConfig(kResizeBilinear<2, true>, hipFuncCachePreferL1);
+			#endif
             hipLaunchKernel(HIP_KERNEL_NAME(kResizeBilinear<2, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgSize, tgtSize, numImages, images.getStride(), scale, centerScale);
         } else {
+		#ifdef ENABLE_CACHE_CONFIG
             hipFuncSetCacheConfig(kResizeBilinear<2, false>, hipFuncCachePreferL1);
+			#endif
             hipLaunchKernel(HIP_KERNEL_NAME(kResizeBilinear<2, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgSize, tgtSize, numImages, images.getStride(), scale, centerScale);
         }
     } else {
         if (checkCaseBounds) {
+		#ifdef ENABLE_CACHE_CONFIG
             hipFuncSetCacheConfig(kResizeBilinear<1, true>, hipFuncCachePreferL1);
+			#endif
             hipLaunchKernel(HIP_KERNEL_NAME(kResizeBilinear<1, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgSize, tgtSize, numImages, images.getStride(), scale, centerScale);
         } else {
+		#ifdef ENABLE_CACHE_CONFIG
             hipFuncSetCacheConfig(kResizeBilinear<1, false>, hipFuncCachePreferL1);
+			#endif
             hipLaunchKernel(HIP_KERNEL_NAME(kResizeBilinear<1, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgSize, tgtSize, numImages, images.getStride(), scale, centerScale);
         }
     }
@@ -2564,26 +2616,38 @@ void convRGBToYUV(NVMatrix& images, NVMatrix& target) {
     dim3 blocks(DIVUP(numImages, imgsPerThread * 32), DIVUP(imgPixels, 4));
     if (imgsPerThread == 4) {
         if (checkCaseBounds) {
+		#ifdef ENABLE_CACHE_CONFIG
             hipFuncSetCacheConfig(kRGBToYUV<4, true>, hipFuncCachePreferL1);
+			#endif
             hipLaunchKernel(HIP_KERNEL_NAME(kRGBToYUV<4, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
         } else {
+		#ifdef ENABLE_CACHE_CONFIG
             hipFuncSetCacheConfig(kRGBToYUV<4, false>, hipFuncCachePreferL1);
+			#endif
             hipLaunchKernel(HIP_KERNEL_NAME(kRGBToYUV<4, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
         }
     } else if (imgsPerThread == 2) {
         if (checkCaseBounds) {
+		#ifdef ENABLE_CACHE_CONFIG
             hipFuncSetCacheConfig(kRGBToYUV<2, true>, hipFuncCachePreferL1);
+			#endif
             hipLaunchKernel(HIP_KERNEL_NAME(kRGBToYUV<2, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
         } else {
+		#ifdef ENABLE_CACHE_CONFIG
             hipFuncSetCacheConfig(kRGBToYUV<2, false>, hipFuncCachePreferL1);
+			#endif
             hipLaunchKernel(HIP_KERNEL_NAME(kRGBToYUV<2, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
         }
     } else {
         if (checkCaseBounds) {
+		#ifdef ENABLE_CACHE_CONFIG
             hipFuncSetCacheConfig(kRGBToYUV<1, true>, hipFuncCachePreferL1);
+			#endif
             hipLaunchKernel(HIP_KERNEL_NAME(kRGBToYUV<1, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
         } else {
+		#ifdef ENABLE_CACHE_CONFIG
             hipFuncSetCacheConfig(kRGBToYUV<1, false>, hipFuncCachePreferL1);
+			#endif
             hipLaunchKernel(HIP_KERNEL_NAME(kRGBToYUV<1, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
         }
     }
@@ -2612,54 +2676,78 @@ void convRGBToLAB(NVMatrix& images, NVMatrix& target, bool center) {
     if (imgsPerThread == 4) {
         if (center) {
             if (checkCaseBounds) {
+			#ifdef ENABLE_CACHE_CONFIG
                 hipFuncSetCacheConfig(kRGBToLAB<4, true, true>, hipFuncCachePreferL1);
+				#endif
                 hipLaunchKernel(HIP_KERNEL_NAME(kRGBToLAB<4, true, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
             } else {
+			#ifdef ENABLE_CACHE_CONFIG
                 hipFuncSetCacheConfig(kRGBToLAB<4, false, true>, hipFuncCachePreferL1);
+				#endif
                 hipLaunchKernel(HIP_KERNEL_NAME(kRGBToLAB<4, false, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
             }
         } else {
             if (checkCaseBounds) {
+			#ifdef ENABLE_CACHE_CONFIG
                 hipFuncSetCacheConfig(kRGBToLAB<4, true, false>, hipFuncCachePreferL1);
+				#endif
                 hipLaunchKernel(HIP_KERNEL_NAME(kRGBToLAB<4, true, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
             } else {
+			#ifdef ENABLE_CACHE_CONFIG
                 hipFuncSetCacheConfig(kRGBToLAB<4, false, false>, hipFuncCachePreferL1);
+				#endif
                 hipLaunchKernel(HIP_KERNEL_NAME(kRGBToLAB<4, false, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
             }
         }
     } else if (imgsPerThread == 2) {
         if (center) {
             if (checkCaseBounds) {
+			#ifdef ENABLE_CACHE_CONFIG
                 hipFuncSetCacheConfig(kRGBToLAB<2, true, true>, hipFuncCachePreferL1);
+				#endif
                 hipLaunchKernel(HIP_KERNEL_NAME(kRGBToLAB<2, true, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
             } else {
+			#ifdef ENABLE_CACHE_CONFIG
                 hipFuncSetCacheConfig(kRGBToLAB<2, false, true>, hipFuncCachePreferL1);
+				#endif
                 hipLaunchKernel(HIP_KERNEL_NAME(kRGBToLAB<2, false, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
             }
         } else {
             if (checkCaseBounds) {
+			#ifdef ENABLE_CACHE_CONFIG
                 hipFuncSetCacheConfig(kRGBToLAB<2, true, false>, hipFuncCachePreferL1);
+				#endif
                 hipLaunchKernel(HIP_KERNEL_NAME(kRGBToLAB<2, true, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
             } else {
+			#ifdef ENABLE_CACHE_CONFIG
                 hipFuncSetCacheConfig(kRGBToLAB<2, false, false>, hipFuncCachePreferL1);
+				#endif
                 hipLaunchKernel(HIP_KERNEL_NAME(kRGBToLAB<2, false, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
             }
         }
     } else {
         if (center) {
             if (checkCaseBounds) {
+			#ifdef ENABLE_CACHE_CONFIG
                 hipFuncSetCacheConfig(kRGBToLAB<1, true, true>, hipFuncCachePreferL1);
+				#endif
                 hipLaunchKernel(HIP_KERNEL_NAME(kRGBToLAB<1, true, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
             } else {
+			#ifdef ENABLE_CACHE_CONFIG
                 hipFuncSetCacheConfig(kRGBToLAB<1, false, true>, hipFuncCachePreferL1);
+				#endif
                 hipLaunchKernel(HIP_KERNEL_NAME(kRGBToLAB<1, false, true>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
             }
         } else {
             if (checkCaseBounds) {
+			#ifdef ENABLE_CACHE_CONFIG
                 hipFuncSetCacheConfig(kRGBToLAB<1, true, false>, hipFuncCachePreferL1);
+				#endif
                 hipLaunchKernel(HIP_KERNEL_NAME(kRGBToLAB<1, true, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
             } else {
+			#ifdef ENABLE_CACHE_CONFIG
                 hipFuncSetCacheConfig(kRGBToLAB<1, false, false>, hipFuncCachePreferL1);
+				#endif
                 hipLaunchKernel(HIP_KERNEL_NAME(kRGBToLAB<1, false, false>), dim3(blocks), dim3(threads), 0, 0, images.getDevData(), target.getDevData(), imgPixels, numImages, images.getStride());
             }
         }
