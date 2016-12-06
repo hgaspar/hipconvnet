@@ -53,7 +53,12 @@ BINDIR     ?= $(ROOTBINDIR)/$(OSLOWER)
 ROOTOBJDIR ?= obj
 
 #HGSOS LIBDIR     := $(ROOTDIR)/lib
+
+ifeq ($(HIP_PLATFORM), nvcc)
 LIBDIR     := $(ROOTDIR)/lib64
+else
+LIBDIR =
+endif
 
 COMMONDIR  := $(ROOTDIR)/samples/common
 SHAREDDIR  := $(ROOTDIR)
@@ -68,8 +73,17 @@ CXX        := $(HIPCC) -fPIC
 CC         := $(HIPCC) -fPIC
 LINK       := $(HIPCC) -fPIC
 
+
+$(warning )
+$(warning 22222222222222222222222)
+$(warning )
+
 # Includes
+
+ifeq ($(HIP_PLATFORM), nvcc)
 INCLUDES  += -I. -I$(CUDA_INSTALL_PATH)/include -I$(COMMONDIR)/inc -I$(SHAREDDIR)/inc
+else ifeq ($(HIP_PLATFORM), hcc)
+endif
 
 # Warning flags
 #HGSOS
@@ -100,7 +114,11 @@ CUBIN_ARCH_FLAG :=
 CXX_ARCH_FLAGS  :=
 #HGSOS NVCCFLAGS       := --gpu-architecture compute_20 --gpu-code compute_20 -ccbin=gcc-4.6
 ##HGSOS NVCCFLAGS       := --gpu-architecture compute_20 --gpu-code compute_20 -ccbin=gcc
+ifeq ($(HIP_PLATFORM), nvcc)
 NVCCFLAGS       := --gpu-architecture=compute_20 --gpu-code=compute_20 -ccbin=gcc
+else
+NVCCFLAGS       := 
+endif
 LIB_ARCH        := $(OSARCH)
 
 # Determining the necessary Cross-Compilation Flags
@@ -183,13 +201,19 @@ else
 endif
 
 ifneq ($(exec),1)
+ifeq ($(HIP_PLATFORM), nvcc)
     NVCCFLAGS += --compiler-options '-fPIC'
+else
+	NVCCFLAGS = -fPIC
+endif
 	LINK += -shared
 endif
 
 # Add profiler output
 ifeq ($(prof),1)
+ifeq ($(HIP_PLATFORM), nvcc)
 	NVCCFLAGS += --ptxas-options=-v
+endif
 endif
 
 # architecture flag for cubin build
@@ -392,22 +416,58 @@ CXXFLAGS  += $(COMMONFLAGS)
 CFLAGS    += $(COMMONFLAGS)
 
 ifeq ($(nvcc_warn_verbose),1)
+ifeq ($(HIP_PLATFORM), nvcc)
 	NVCCFLAGS += $(addprefix --compiler-options ,$(CXXWARN_FLAGS)) 
 	NVCCFLAGS += --compiler-options -fno-strict-aliasing
+endif
+endif
+
+
+$(warning )
+$(warning 333333333333333333333333333)
+$(warning )
+
+
+ifeq ($(HIP_PLATFORM), nvcc)
+	NVCCFLAGS = 
+	LIB = 
+	GENCODE_SM10 = 
+	GENCODE_ARCH =
+	GENCODE_SM20 =
+	NVCCFLAGS = 
+	SMVERSIONFLAGS = 
 endif
 
 ################################################################################
 # Set up object files
 ################################################################################
 OBJDIR := $(ROOTOBJDIR)/$(LIB_ARCH)/$(BINSUBDIR)
+
+$(warning 44444444444444444444444444)
+
+
 OBJS +=  $(patsubst %.cpp,$(OBJDIR)/%.cpp.o,$(CCFILES))
+
+$(warning 55555555555555555555555555)
+
+
 OBJS +=  $(patsubst %.c,$(OBJDIR)/%.c.o,$(CFILES))
+
+$(warning 6666666666666666666666666666666666)
+
+
 OBJS +=  $(patsubst %.cu,$(OBJDIR)/%.cu.o,$(CUFILES))
+
+$(warning 7777777777777777777777777777)
+
 
 ################################################################################
 # Set up cubin output files
 ################################################################################
 CUBINDIR := $(SRCDIR)data
+
+$(warning 8888888888888888888888888888888888888)
+
 CUBINS +=  $(patsubst %.cu,$(CUBINDIR)/%.cubin,$(notdir $(CUBINFILES)))
 
 ################################################################################
@@ -416,14 +476,24 @@ CUBINS +=  $(patsubst %.cu,$(CUBINDIR)/%.cubin,$(notdir $(CUBINFILES)))
 PTXDIR := $(SRCDIR)data
 PTXBINS +=  $(patsubst %.cu,$(PTXDIR)/%.ptx,$(notdir $(PTXFILES)))
 
+
+$(warning 999999999999999999999999999999999)
+
 ################################################################################
 # Rules
 ################################################################################
 $(OBJDIR)/%.c.o : $(SRCDIR)%.c $(C_DEPS)
 	$(VERBOSE)$(HIPCC) $(CFLAGS) -o $@ -c $<
 
+$(warning 101010101010101010101010101010101010)
+
+
+
 $(OBJDIR)/%.cpp.o : $(SRCDIR)%.cpp $(C_DEPS)
 	$(VERBOSE)$(HIPCC) $(CXXFLAGS) -o $@ -c $<
+
+$(warning 1212121212121212121212121212)
+
 
 # Default arch includes gencode for sm_10, sm_20, and other archs from GENCODE_ARCH declared in the makefile
 $(OBJDIR)/%.cu.o : $(SRCDIR)%.cu $(CU_DEPS)
@@ -454,9 +524,14 @@ $(PTXDIR)/%.ptx : $(SRCDIR)%.cu ptxdirectory
 define SMVERSION_template
 #OBJS += $(patsubst %.cu,$(OBJDIR)/%.cu_$(1).o,$(notdir $(CUFILES_$(1))))
 OBJS += $(patsubst %.cu,$(OBJDIR)/%.cu_$(1).o,$(notdir $(CUFILES_sm_$(1))))
+
+
+$(warning 1313131313131313131313131313131313)
+
+
 $(OBJDIR)/%.cu_$(1).o : $(SRCDIR)%.cu $(CU_DEPS)
-#	$(VERBOSE)$(HIPCC) -o $$@ -c $$< $(NVCCFLAGS)  $(1)
-	$(VERBOSE)$(HIPCC) -gencode=arch=compute_$(1),code=\"sm_$(1),compute_$(1)\" $(GENCODE_SM20) -o $$@ -c $$< $(NVCCFLAGS)
+	$(VERBOSE)$(HIPCC) -o $$@ -c $$< $(NVCCFLAGS)  $(1)
+#HGSOS	$(VERBOSE)$(HIPCC) -gencode=arch=compute_$(1),code=\"sm_$(1),compute_$(1)\" $(GENCODE_SM20) -o $$@ -c $$< $(NVCCFLAGS)
 endef
 
 # This line invokes the above template for each arch version stored in
@@ -464,17 +539,31 @@ endef
 # function interprets it as make commands.
 $(foreach smver,$(SM_VERSIONS),$(eval $(call SMVERSION_template,$(smver))))
 
+
+$(warning 141414141414141414141414141)
+
 $(TARGET): makedirectories $(OBJS) $(CUBINS) $(PTXBINS) link Makefile
 	$(VERBOSE)$(LINKLINE)
+
+$(warning 15151515151515151515151515151)
 	
 link: 
 	$(VERBOSE)ln -sf ./bin/linux/release/$(EXECUTABLE) .
 
+$(warning 1616161616161616161616161616161)
+
+
 cubindirectory:
 	$(VERBOSE)mkdir -p $(CUBINDIR)
 
+$(warning 171711717171717171717171717171)
+
+
 ptxdirectory:
 	$(VERBOSE)mkdir -p $(PTXDIR)
+
+$(warning 1818181818181818181818181818)
+
 
 tidy :
 	$(VERBOSE)find . | egrep "#" | xargs rm -f
@@ -501,3 +590,6 @@ clobber : clean
 #%.o:: %.cpp
 #	$(HIPCC) $(HIPCC_FLAGS) $< -c -o $@
 	
+$(warning)
+$(warning EXITINGEXITING )
+$(warning)
