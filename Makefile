@@ -3,6 +3,12 @@
 HIP_PATH=/opt/rocm/hip
 HIPCC=$(HIP_PATH)/bin/hipcc
 HIPLD=$(HIP_PATH)/bin/hipcc
+
+
+HIP_BLAS=$(HIP_PATH)/hcblas
+HIP_BLAS_INCLUDE=$(HIP_BLAS)/include
+
+
 #export HSA_PATH = /opt/rocm/hsa
 
 #enable profiling
@@ -49,8 +55,7 @@ else ifeq ($(HIP_PLATFORM), hcc)
 LIB := -lpthread -L$(ATLAS_LIB_PATH) -lcblas
 endif
 
-#USECUBLAS   := 1
-USECUBLAS   := 0
+USECUBLAS   := 1
 
 PYTHON_VERSION=$(shell python -V 2>&1 | cut -d ' ' -f 2 | cut -d '.' -f 1,2)
 LIB += -lpython$(PYTHON_VERSION)
