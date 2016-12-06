@@ -3075,6 +3075,7 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                         } else {
                             #ifdef ENABLE_CACHE_CONFIG 
 							hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
