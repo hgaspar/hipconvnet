@@ -966,21 +966,31 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, false, true, true>, hipFuncCachePreferShared);
+						#ifdef ENABLE_CACHE_CONFIG
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, false, true, true>, hipFuncCachePreferShared);
+							#endif
+							
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, false, true, true>, hipFuncCachePreferShared);
+						#ifdef ENABLE_CACHE_CONFIG
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, false, true, true>, hipFuncCachePreferShared);
+							#endif
+							
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 4, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -988,21 +998,25 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else if (imgsPerThread == 2) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG  hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG  hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 4, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG  hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1010,21 +1024,25 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG  hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 4, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1034,21 +1052,29 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 if (imgsPerThread == 8) {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 4, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1056,21 +1082,29 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 4, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1078,21 +1112,29 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 4, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1102,29 +1144,42 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 if (imgsPerThread == 8) {
                     if (checkCaseBounds) {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 1, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 1, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 1, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 2, false, true, true>, hipFuncCachePreferShared);
+							#endif
+							
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 3, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 3, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 3, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 1, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 1, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 1, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 2, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 3, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 3, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 3, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
@@ -1132,29 +1187,41 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 1, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 1, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 1, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 2, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 3, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 3, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 3, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 1, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 1, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 1, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 2, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 3, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 3, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 3, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
@@ -1162,29 +1229,41 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else {
                     if (checkCaseBounds) {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 1, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 1, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 1, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 2, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 3, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 3, false, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 3, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 1, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 1, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 1, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 2, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 3, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 3, false, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 3, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
@@ -1196,21 +1275,25 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, true, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 4, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, true, true, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, true, false, true>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 4, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1218,21 +1301,25 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else if (imgsPerThread == 2) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 4, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 4, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1240,21 +1327,25 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 4, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 4, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1264,21 +1355,29 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 if (imgsPerThread == 8) {
                     if  (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 4, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 4, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1286,21 +1385,29 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else if (imgsPerThread == 4) {
                     if  (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 4, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 4, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1308,21 +1415,29 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else {
                     if  (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 4, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 4, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1332,29 +1447,41 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 if (imgsPerThread == 8) {
                     if (checkCaseBounds) {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 1, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 1, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 1, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 3, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 3, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 3, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 1, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 1, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 1, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 3, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 3, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 3, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
@@ -1362,29 +1489,41 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 1, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 1, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 1, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 3, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 3, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 3, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 1, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 1, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 1, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 3, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 3, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 3, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
@@ -1392,29 +1531,41 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else {
                     if (checkCaseBounds) {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 1, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 1, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 1, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 3, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 3, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 3, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 1, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 1, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 1, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 3, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 3, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 3, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
@@ -1428,21 +1579,25 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 4, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 4, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1450,21 +1605,25 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else if (imgsPerThread == 2) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 4, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 4, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1472,21 +1631,25 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 4, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 4, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1496,21 +1659,29 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 if (imgsPerThread == 8) {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 4, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 4, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1518,21 +1689,29 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 4, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 4, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1540,21 +1719,29 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 4, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 4, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1564,29 +1751,41 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 if (imgsPerThread == 8) {
                     if (checkCaseBounds) {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 1, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 1, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 1, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 3, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 3, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 3, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 1, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 1, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 1, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 3, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 3, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 3, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
@@ -1594,29 +1793,41 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 1, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 1, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 1, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 3, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 3, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 3, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 1, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 1, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 1, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 3, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 3, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 3, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
@@ -1624,29 +1835,41 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else {
                     if (checkCaseBounds) {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 1, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 1, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 1, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 3, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 3, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 3, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 1, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 1, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 1, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 3, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 3, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 3, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
@@ -1658,21 +1881,25 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 4, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 4, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 4, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 4, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 4, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1680,21 +1907,25 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else if (imgsPerThread == 2) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 4, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 4, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 4, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 2, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 2, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1702,21 +1933,25 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 4, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 4, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 4, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(conv_img_acts_manycolor<4, 32, 1, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(conv_img_acts_manycolor<4, 32, 1, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1726,21 +1961,29 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 if (imgsPerThread == 8) {
                     if  (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 4, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, true, true, false>, hipFuncCachePreferShared);
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 4, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 4, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<8, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<8, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1748,21 +1991,29 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else if (imgsPerThread == 4) {
                     if  (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 4, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 4, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 4, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<4, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<4, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1770,21 +2021,29 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else {
                     if  (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 4, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 4, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 4, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_mediumcolor<2, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor<2, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -1794,29 +2053,41 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 if (imgsPerThread == 8) {
                     if (checkCaseBounds) {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 1, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 1, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 1, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 3, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 3, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 3, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 1, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 1, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 1, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<8, 3, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<8, 3, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<8, 3, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
@@ -1824,29 +2095,41 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 1, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 1, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 1, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 3, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 3, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 3, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 1, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 1, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 1, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<4, 3, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<4, 3, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<4, 3, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
@@ -1854,29 +2137,41 @@ void _imgActs(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets,
                 } else {
                     if (checkCaseBounds) {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 1, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 1, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 1, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 3, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 3, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 3, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors == 1) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 1, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 1, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 1, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 2) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         } else if (numFilterColors == 3) {
-                            hipFuncSetCacheConfig(img_acts_color<2, 3, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG 
+							hipFuncSetCacheConfig(img_acts_color<2, 3, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_color<2, 3, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(),
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, scaleTargets, scaleOutput);
                         }
@@ -1999,21 +2294,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, false, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, false, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, false, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 4, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, false, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2021,21 +2320,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else if (imgsPerThread == 2) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, false, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, false, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, false, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 4, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, false, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2043,21 +2346,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, false, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, false, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, false, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 4, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, false, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2068,21 +2375,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 if (imgsPerThread == 8) {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, false, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, false, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, false, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 4, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, false, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2090,21 +2401,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, false, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, false, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, false, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 4, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, false, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2112,21 +2427,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, false, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 4, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, false, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, false, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 2, false, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, false, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 4, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, false, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, false, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 2, false, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2138,21 +2457,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 4, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 4, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2160,21 +2483,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else if (imgsPerThread == 2) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 4, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 4, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2182,21 +2509,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 4, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 4, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2207,21 +2538,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 if (imgsPerThread == 8) {
                     if  (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 4, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 4, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2229,21 +2564,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else if (imgsPerThread == 4) {
                     if  (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 4, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 4, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2251,21 +2590,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else {
                     if  (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 4, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, true, true, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, true, true, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 2, true, true, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 4, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, true, false, true>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, true, false, true>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 2, true, false, true>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2279,21 +2622,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 4, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 4, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2301,21 +2648,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else if (imgsPerThread == 2) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 4, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 4, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2323,21 +2674,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 4, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 4, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2348,21 +2703,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 if (imgsPerThread == 8) {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 4, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 4, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2370,21 +2729,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 4, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 4, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2392,21 +2755,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 4, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, false, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, false, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 2, false, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 4, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, false, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, false, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 2, false, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2418,21 +2785,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 4, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 4, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 4, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 4, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 4, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2440,21 +2811,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else if (imgsPerThread == 2) {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 4, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 4, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 4, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 2, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 2, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2462,21 +2837,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else {
                     if (checkCaseBounds) {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 4, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (numFilterColors % 16 == 0) {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 4, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 4, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_manycolor_sparse_rand<4, 32, 1, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_manycolor_sparse_rand<4, 32, 1, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2486,21 +2865,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 if (imgsPerThread == 8) {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 4, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 4, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 4, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<8, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<8, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2508,21 +2891,25 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else if (imgsPerThread == 4) {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 4, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 4, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 4, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<4, 2, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<4, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
@@ -2530,21 +2917,24 @@ void _imgActsSparse(NVMatrix& hidActs, NVMatrix& filters, NVMatrix& targets, int
                 } else {
                     if (checkCaseBounds) {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 4, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, true, true, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, true, true, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 2, true, true, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
                     } else {
                         if (colorsPerThread == 4) {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 4, true, false, false>, hipFuncCachePreferShared); 
+							#endif
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 4, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         } else {
-                            hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, true, false, false>, hipFuncCachePreferShared);
+                            #ifdef ENABLE_CACHE_CONFIG hipFuncSetCacheConfig(img_acts_mediumcolor_sparse_rand<2, 2, true, false, false>, hipFuncCachePreferShared); 
                             hipLaunchKernel(HIP_KERNEL_NAME(img_acts_mediumcolor_sparse_rand<2, 2, true, false, false>), dim3(blocks), dim3(threads), 0, 0, hidActs.getDevData(), filters.getDevData(), targets.getDevData(), dColorIndices,
                                                                 numModulesY, numModulesX, numImages, numFilters, filterSize, imgSizeY, imgSizeX, paddingStart, moduleStride, numImgColors, numFilterColors, numGroups, scaleTargets, scaleOutput);
                         }
