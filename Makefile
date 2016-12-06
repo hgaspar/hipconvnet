@@ -5,7 +5,7 @@ HIPCC=$(HIP_PATH)/bin/hipcc
 HIPLD=$(HIP_PATH)/bin/hipcc
 
 
-HIP_BLAS=$(HIP_PATH)/hcblas
+HC_BLAS=/opt/rocm/hcblas
 HIP_BLAS_INCLUDE=$(HIP_BLAS)/include
 
 
