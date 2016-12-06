@@ -56,7 +56,7 @@
  * so the compiler is messing up here somehow. It's unable to optimize that case away.
  */
 template <int B_Y, int B_X, int pixelsPerThread, int preloadCases, int numColors, bool scale, bool checkCaseBounds>
-__global__ void conv_weight_acts_c(hipLaunchParm lp, * images, float* hidActs, float* targets,
+__global__ void conv_weight_acts_c(hipLaunchParm lp, float* images, float* hidActs, float* targets,
                                    const int numImages, const int numFilters,
                                    const int numModulesY, const int numModulesX,
                                    const int imgSizeY, const int imgSizeX, const int filterSize,
